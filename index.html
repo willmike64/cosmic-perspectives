@@ -1565,6 +1565,50 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
       <!-- ── ARTICLE ── -->
       <article class="article">
 <section class="section" id="galaxies">
+<style>
+#galaxies .g1-lede{font-size:1.18em;line-height:1.65}
+#galaxies .g1-answer{border:1px solid var(--color-border);border-left:3px solid var(--color-accent);background:var(--color-surface);border-radius:var(--radius-md);padding:1.1rem 1.3rem;margin:1.6rem 0}
+#galaxies .g1-answer p{margin:0 0 .6rem}#galaxies .g1-answer p:last-child{margin:0}
+#galaxies .g1-eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent);margin:0 0 .5rem}
+#galaxies .g1-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin:1.6rem 0}
+#galaxies .g1-stat{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:.9rem 1rem}
+#galaxies .g1-stat b{display:block;font-family:var(--font-display);font-size:1.7rem;font-weight:400;line-height:1.1;color:var(--color-text)}
+#galaxies .g1-stat span{display:block;font-size:.8rem;line-height:1.4;color:var(--color-text-muted);margin-top:.35rem}
+#galaxies .g1-tl{list-style:none;margin:1.4rem 0;padding:0;border-left:1px solid var(--color-border)}
+#galaxies .g1-tl li{position:relative;padding:0 0 1.05rem 1.3rem;margin:0}
+#galaxies .g1-tl li::before{content:"";position:absolute;left:-5px;top:.45em;width:9px;height:9px;border-radius:50%;background:var(--color-accent)}
+#galaxies .g1-tl .y{font-family:var(--font-mono);font-size:.78rem;color:var(--color-accent);letter-spacing:.06em;display:block}
+#galaxies .g1-tl .t{display:block;line-height:1.55}
+#galaxies .g1-calc{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.3rem 1.4rem;margin:1.6rem 0}
+#galaxies .g1-calc label{display:block;font-size:.85rem;color:var(--color-text-muted);margin:.9rem 0 .35rem}
+#galaxies .g1-calc select,#galaxies .g1-calc input[type=range]{width:100%;font:inherit;color:var(--color-text);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:.45rem .5rem}
+#galaxies .g1-calc input[type=range]{padding:0;accent-color:var(--color-accent)}
+#galaxies .g1-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin-top:1rem}
+#galaxies .g1-out{background:var(--color-surface-2);border-radius:var(--radius-md);padding:.8rem .9rem}
+#galaxies .g1-out b{display:block;font-family:var(--font-display);font-size:1.55rem;font-weight:400;color:var(--color-text)}
+#galaxies .g1-out span{font-size:.78rem;color:var(--color-text-muted);line-height:1.4;display:block}
+#galaxies .g1-out.hl{outline:1px solid var(--color-accent)}
+#galaxies .g1-note{font-size:.82rem;color:var(--color-text-muted);line-height:1.55;margin:.9rem 0 0}
+#galaxies .g1-check{display:flex;gap:.5rem;align-items:center;font-size:.85rem;color:var(--color-text-muted);margin-top:.8rem}
+#galaxies .g1-tablewrap{overflow-x:auto;margin:1.4rem 0;border:1px solid var(--color-border);border-radius:var(--radius-md)}
+#galaxies table.g1-t{width:100%;border-collapse:collapse;font-size:.86rem;line-height:1.45;min-width:560px}
+#galaxies .g1-t th,#galaxies .g1-t td{text-align:left;vertical-align:top;padding:.6rem .75rem;border-bottom:1px solid var(--color-divider)}
+#galaxies .g1-t th{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted);background:var(--color-surface)}
+#galaxies .g1-t tr:last-child td{border-bottom:0}
+#galaxies sup a{color:var(--color-accent);text-decoration:none}
+#galaxies .g1-refs{font-size:.84rem;line-height:1.55;color:var(--color-text-muted);padding-left:1.6rem}
+#galaxies .g1-refs li{margin:0 0 .45rem}
+#galaxies .g1-refs a{color:var(--color-accent);word-break:break-word}
+#galaxies .g1-refs li:target{background:var(--color-surface-2);border-radius:4px}
+#galaxies details.g1-more{margin:1.6rem 0;border:1px solid var(--color-border);border-radius:var(--radius-md);padding:.2rem 1.1rem}
+#galaxies details.g1-more summary{cursor:pointer;padding:.8rem 0;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent)}
+#galaxies .g1-cite{font-size:.82rem;color:var(--color-text-muted);border-top:1px solid var(--color-divider);padding-top:1rem;margin-top:1.4rem}
+#galaxies ul.g1-list{font-family:var(--font-read);font-size:var(--text-base);line-height:1.8;color:var(--color-text-muted);max-width:70ch;margin:0 0 var(--space-5);padding-left:1.2rem;list-style:disc}
+#galaxies ul.g1-list li{margin:0 0 .7rem}#galaxies ul.g1-list strong{color:var(--color-text)}#galaxies ul.g1-list li::marker{color:var(--color-accent)}
+#galaxies .g1-tl .t{font-family:var(--font-read);color:var(--color-text-muted);max-width:70ch}
+#galaxies .g1-stats{grid-template-columns:repeat(auto-fit,minmax(128px,1fr))}
+#galaxies a.is-locked::after{content:none}
+</style>
           <div class="section-label">
             <span class="section-label__num">01</span>
             <div class="section-label__line"></div>
@@ -1572,7 +1616,21 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
           </div>
           <h2>Total Estimated Number of Galaxies</h2>
 
-          <p contenteditable="false">Astronomers estimate that the observable universe contains on the order of <strong>hundreds of billions to trillions of galaxies</strong>. Early Hubble Deep Field observations in the 1990s suggested roughly 100–200 billion galaxies. However, a landmark 2016 analysis of deep-sky surveys led by Christopher Conselice concluded this figure was at least ten times too low — implying on the order of <em>2 trillion galaxies</em> in the observable universe.</p>
+          <p class="g1-lede" contenteditable="false">In 1934 Edwin Hubble counted about <strong>44,000 galaxies</strong> on 1,283 photographic plates and treated that as a fair sample of the cosmos.<sup><a href="#g1r1">1</a></sup> In 2025 a single JWST catalogue listed <strong>784,016 sources</strong> in a patch of sky only about 2.7 times the size of the full Moon.<sup><a href="#g1r37">37</a></sup> Between those two numbers sits one of astronomy's most quoted and least understood figures: the number of galaxies in the observable universe.</p>
+
+          <div class="g1-answer">
+            <p class="g1-eyebrow">The short answer · November 2026</p>
+            <p><strong>Somewhere between a few hundred billion and about two trillion</strong>, and the spread is mostly about <em>definition</em>, not measurement. Telescopes at Hubble depth would see roughly 250 billion galaxies across the whole sky.<sup><a href="#g1r7">7</a></sup> The two-trillion figure adds the faint galaxies that models say must exist down to a million solar masses in stars.<sup><a href="#g1r7">7</a></sup> No one has directly seen most of them, and no paper published in 2025 or 2026 has replaced that estimate.</p>
+            <p>A careful one-sentence version reads: “about 2 × 10¹² galaxies with stellar mass ≥ 10⁶ M☉ out to redshift 8, of which roughly a tenth are detectable today.”</p>
+          </div>
+
+          <div class="g1-stats" aria-label="Key numbers">
+            <div class="g1-stat"><b>~10,000</b><span>galaxies in the Hubble Ultra Deep Field, 11 arcmin² of sky<sup><a href="#g1r4">4</a></sup></span></div>
+            <div class="g1-stat"><b>2.0<small style="font-size:.55em">+0.7/−0.6</small> × 10¹²</b><span>Conselice et al. 2016 total, z &lt; 8<sup><a href="#g1r7">7</a></sup></span></div>
+            <div class="g1-stat"><b>11.2 nW</b><span>m⁻² sr⁻¹ cosmic optical background from New Horizons, matching known galaxies<sup><a href="#g1r19">19</a></sup></span></div>
+            <div class="g1-stat"><b>z = 14.44</b><span>MoM-z14, the most distant confirmed galaxy, ~280 Myr after the Big Bang<sup><a href="#g1r28">28</a></sup></span></div>
+            <div class="g1-stat"><b>~20 billion</b><span>galaxies Rubin's ten-year survey expects to catalogue<sup><a href="#g1r40">40</a></sup></span></div>
+          </div>
 
           <div class="estimate-bar">
             <p class="estimate-bar__label">Current Estimate Range</p>
@@ -1585,48 +1643,217 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
                 <div class="estimate-bar__marker-desc">Low end of early<br>Hubble estimates</div>
               </div>
               <div class="estimate-bar__marker">
-                <div class="estimate-bar__marker-val">~200B</div>
-                <div class="estimate-bar__marker-desc">Original Hubble Deep<br>Field estimate</div>
+                <div class="estimate-bar__marker-val">~200–250B</div>
+                <div class="estimate-bar__marker-desc">What Hubble-depth<br>imaging can see</div>
               </div>
               <div class="estimate-bar__marker">
                 <div class="estimate-bar__marker-val">~2T</div>
-                <div class="estimate-bar__marker-desc">Conselice 2016<br>(modeled upper)</div>
+                <div class="estimate-bar__marker-desc">Conselice 2016<br>(to 10⁶ M☉, z &lt; 8)</div>
               </div>
               <div class="estimate-bar__marker">
                 <div class="estimate-bar__marker-val">&gt;Several T</div>
-                <div class="estimate-bar__marker-desc">Speculative (ultra-faint<br>dwarf galaxies)</div>
+                <div class="estimate-bar__marker-desc">If the mass floor<br>drops further</div>
               </div>
             </div>
           </div>
 
-          <p contenteditable="false">The dramatic 2016 revision came from inferring many faint, distant galaxies that current telescopes cannot directly observe. The study estimated <strong>90% of galaxies are too dim and far to be seen</strong> with present technology. </p>
+          <h3>A Century of Counting</h3>
+          <p contenteditable="false">Every estimate since Hubble works the same way. Astronomers count galaxies in a small patch of sky, then scale the count up to the whole sky, about 41,253 square degrees. Each generation of telescope has gone fainter and found more.</p>
+          <ol class="g1-tl">
+            <li><span class="y">1934 · Mount Wilson</span><span class="t">Hubble counts ~44,000 galaxies over 650 deg² of photographic plates and finds them spread evenly across the sky.<sup><a href="#g1r1">1</a></sup></span></li>
+            <li><span class="y">1995 · Hubble Deep Field</span><span class="t">A team points Hubble at an apparently empty patch near the Big Dipper for 150 orbits and 342 exposures. About 3,000 galaxies appear in roughly 5 arcmin².<sup><a href="#g1r2">2</a></sup> A southern counterpart in 1998 finds about 2,500 more.<sup><a href="#g1r3">3</a></sup></span></li>
+            <li><span class="y">2004 · Hubble Ultra Deep Field</span><span class="t">One million seconds of exposure on 11 arcmin² reveal at least 10,000 objects, about 1/13,000,000 of the sky.<sup><a href="#g1r4">4</a></sup></span></li>
+            <li><span class="y">2012 · eXtreme Deep Field</span><span class="t">Two million seconds and more than 2,000 images. NASA quotes about 5,500 galaxies, while the team's catalogue lists 7,121 in the deepest region. The difference comes from detection thresholds, which is a small reminder that even counting is a choice.<sup><a href="#g1r5">5</a></sup></span></li>
+            <li><span class="y">2016 · Two trillion</span><span class="t">Conselice and colleagues combine deep-field mass functions out to z = 8 and conclude the universe holds about ten times more galaxies than the 200-billion figure then in use.<sup><a href="#g1r7">7</a>,<a href="#g1r8">8</a></sup></span></li>
+            <li><span class="y">2019 · Hubble Legacy Field</span><span class="t">7,500 exposures taken over 16 years are stitched into one view containing 265,000 galaxies.<sup><a href="#g1r6">6</a></sup></span></li>
+            <li><span class="y">2021–2024 · New Horizons</span><span class="t">Measurements of background light from beyond Pluto at first appear to challenge the trillions, then end up agreeing with known galaxies.<sup><a href="#g1r16">16</a>,<a href="#g1r19">19</a></sup> The full story is told below.</span></li>
+            <li><span class="y">2022–2026 · JWST</span><span class="t">CEERS catalogues more than 80,000 galaxies in ~100 arcmin².<sup><a href="#g1r35">35</a></sup> JADES DR5 has ~500,000 in 469 arcmin², including 2,081 beyond z = 8.<sup><a href="#g1r36">36</a></sup> COSMOS-Web's COSMOS2025 lists 784,016 sources in 0.54 deg².<sup><a href="#g1r37">37</a></sup></span></li>
+            <li><span class="y">2025–2026 · The wide-field era</span><span class="t">Euclid's first quick release spots 26 million galaxies in 63 deg²,<sup><a href="#g1r38">38</a></sup> and Rubin's first image holds ~10 million.<sup><a href="#g1r40">40</a></sup> The LSST begins on 30 June 2026,<sup><a href="#g1r41">41</a></sup> Roman launches on 30 August 2026,<sup><a href="#g1r43">43</a></sup> and Euclid's first large data release is scheduled for 12 November 2026.<sup><a href="#g1r39">39</a></sup></span></li>
+          </ol>
 
-          <p contenteditable="false"><span class="update-tag">Nov 2026</span> A separate line of evidence comes from NASA's New Horizons probe, which can measure the faint background glow of the sky far from the scattered sunlight of the inner solar system. Its 2021 measurement was initially reported as being in tension with the 2-trillion figure, but NASA has since issued a correction: the New Horizons data <strong>do not constrain the total number of galaxies</strong>; they constrain the total amount of ultraviolet and optical light that all galaxies emit.<sup>51</sup> A refined 2024 analysis (Postman et al., <em>The Astrophysical Journal</em>) measured this cosmic optical background at roughly 11 nW m⁻² sr⁻¹ and found it consistent with the light expected from the galaxies thought to have formed since the Big Bang, with no strong sign of an unknown extra light source.<sup>52</sup> In other words, the background light is accounted for by known galaxy populations — but because faint dwarf galaxies contribute very little light, this measurement cannot by itself settle whether there are hundreds of billions or trillions of them.</p>
+          <h3>Count It Yourself</h3>
+          <p contenteditable="false">The arithmetic behind the headline numbers fits in a few lines. Pick a deep field below and the calculator scales its count to the full sky, which is about 148.5 million square arcminutes. Then add the galaxies that field is too shallow to detect.</p>
+
+          <div class="g1-calc" id="g1-calc">
+            <p class="g1-eyebrow">Deep-field extrapolator</p>
+            <label for="g1-field">Survey</label>
+            <select id="g1-field">
+              <option value="3000|5.3|Hubble Deep Field (1995)">Hubble Deep Field, 1995 · ~3,000 galaxies · ~5 arcmin²</option>
+              <option value="10000|11|Hubble Ultra Deep Field (2004)" selected>Hubble Ultra Deep Field, 2004 · ~10,000 · 11 arcmin²</option>
+              <option value="80000|100|CEERS / JWST (2022–25)">CEERS (JWST) · &gt;80,000 · ~100 arcmin²</option>
+              <option value="500000|469|JADES DR5 / JWST (2026)">JADES DR5 (JWST) · ~500,000 · 469 arcmin²</option>
+              <option value="784016|1944|COSMOS2025 / JWST (2025)">COSMOS2025 (JWST) · 784,016 sources · 0.54 deg²</option>
+            </select>
+            <label for="g1-comp">What fraction of all galaxies does this survey detect? <strong id="g1-compv">10%</strong></label>
+            <input type="range" id="g1-comp" min="5" max="100" step="1" value="10" aria-describedby="g1-compnote">
+            <p class="g1-note" id="g1-compnote">The default is 10%, following NASA's summary of Conselice et al. that about 90% of galaxies are too faint and too far to detect.<sup><a href="#g1r8">8</a></sup> The paper's model implies about 10,000 galaxies per arcmin² in total.<sup><a href="#g1r7">7</a></sup> Set the slider to 100% to assume the survey misses nothing.</p>
+            <label class="g1-check"><input type="checkbox" id="g1-floor"> Lower the mass floor from 10⁶ to 10⁵ M☉ (Conselice: about 7× more galaxies)<sup><a href="#g1r7">7</a></sup></label>
+            <div class="g1-row" aria-live="polite">
+              <div class="g1-out"><b id="g1-sky">—</b><span>galaxies a whole-sky survey at this depth would see</span></div>
+              <div class="g1-out hl"><b id="g1-tot">—</b><span>implied total, including the galaxies too faint to detect</span></div>
+              <div class="g1-out"><b id="g1-per">—</b><span>galaxies per arcmin² in this field</span></div>
+            </div>
+            <p class="g1-note">Caveats: a single small field can sit in a crowded or sparse region (cosmic variance). JWST catalogues include some stars and duplicate detections. Lensed fields such as UNCOVER are magnified and would inflate the scaling, so they are left out here. Professional estimates integrate mass functions over volume and redshift rather than scaling one image.</p>
+          </div>
 
           <div class="fact-card">
             <p class="fact-card__label">Key Fact — Hubble Ultra Deep Field</p>
-            <p>The HUDF image, assembled from a ~1-million-second exposure in 2003–2004, revealed approximately <strong>10,000 galaxies</strong> in a tiny patch of sky covering roughly 1/13,000,000th of the total sky area. Telescope surveys of such deep fields let astronomers count galaxies in a small sample area and extrapolate across the full sky — one of the primary tools for estimating the universe's total galaxy population.</p>
+            <p>The HUDF image was assembled from a ~1-million-second exposure in 2003–2004 and revealed approximately <strong>10,000 galaxies</strong> in a patch of sky covering roughly 1/13,000,000 of the total sky area.<sup><a href="#g1r4">4</a></sup> Scale that count up and you get about 135 billion galaxies, which is the origin of the familiar “one to two hundred billion.” Conselice's re-analysis of the same depth gives about 250 billion detectable galaxies across the whole sky.<sup><a href="#g1r7">7</a></sup></p>
           </div>
 
-          <p contenteditable="false">Modern sources typically quote a wide range: <em>"somewhere between 100 billion and 2 trillion"</em> in the observable universe. Note also that the observable universe is only a fraction of the full universe, whose total extent is unknown.</p>
+          <h3>Inside the Two-Trillion Figure</h3>
+          <p contenteditable="false">The 2016 study (Conselice, Wilkinson, Duncan &amp; Mortlock, <em>The Astrophysical Journal</em> 830, 83) did not count two trillion objects.<sup><a href="#g1r7">7</a></sup> It took galaxy <em>stellar mass functions</em> measured in deep fields from z ≈ 0.2 to 8, which describe how many galaxies there are of each mass per unit volume. It fitted each one with a Schechter function, extended the fits down to a stellar mass of 10⁶ M☉, and integrated over the cosmic volume in our past light cone. The headline result is <strong>2.0 (+0.7/−0.6) × 10¹² galaxies at z &lt; 8</strong>. Two alternative ways of doing the integral bracket it at 1.2 × 10¹² and 2.8 × 10¹².<sup><a href="#g1r7">7</a></sup></p>
+          <p contenteditable="false">Three details are usually lost in retelling:</p>
+          <ul class="g1-list">
+            <li><strong>The answer depends on the low-mass cutoff.</strong> Moving the floor from 10⁶ to 10⁵ M☉ multiplies the total by about seven, and extending the integral to z = 12 adds about 65%.<sup><a href="#g1r7">7</a></sup> The fitted faint-end slopes (α) range from about −1.0 to −2.1. When α approaches −2 the number of galaxies keeps climbing as you go to lower masses, so the cutoff, rather than the data, sets the total.</li>
+            <li><strong>It is a count across time, not a snapshot.</strong> Looking out in space means looking back in time, so the total adds up galaxies seen at every epoch out to z = 8. The study found that the number of galaxies per unit volume has <em>fallen</em> by roughly a factor of ten since the early universe, from about 0.7 per cubic megaparsec at z = 8, because small galaxies have merged into larger ones.<sup><a href="#g1r7">7</a>,<a href="#g1r8">8</a></sup></li>
+            <li><strong>“90% unseen” is a press-release summary.</strong> NASA's 2016 release says 90% of galaxies are too faint and too far for current telescopes.<sup><a href="#g1r8">8</a></sup> The paper itself gives detected and total surface densities of about 1,600 and about 10,000 galaxies per arcmin² at Hubble depth.<sup><a href="#g1r7">7</a></sup> That is roughly three galaxies per square arcsecond, so nearly every line of sight eventually ends on a galaxy.</li>
+          </ul>
 
-          <p contenteditable="false"><span class="update-tag">Nov 2026</span> <strong>The next census is underway.</strong> Alongside JWST, three wide-area surveys designed to map galaxies by the billion are now operating. The Vera C. Rubin Observatory officially began its ten-year Legacy Survey of Space and Time on 30 June 2026.<sup>53</sup> ESA's Euclid mission is scheduled to issue its first major data release (DR1-Foundation, about 1,900 square degrees of sky) in November 2026, with the full DR1 following in mid-2027.<sup>54</sup> NASA's Nancy Grace Roman Space Telescope launched on 30 August 2026 and is due to begin science operations in early 2027.<sup>55,56</sup> None of these will count every galaxy, but together they will sharply improve the deep-field statistics on which every total-count extrapolation rests.</p>
+          <h3>What Counts as a Galaxy?</h3>
+          <p contenteditable="false">If the total depends on the faintest systems, the definition of a galaxy matters. The most widely used working definition comes from Willman and Strader: <em>“a gravitationally bound collection of stars whose properties cannot be explained by a combination of baryons and Newton's laws of gravity”</em>. In practice that means signs of dark matter, or a spread in heavy-element content showing that stars formed over a long period.<sup><a href="#g1r9">9</a></sup> By that test, Segue 1, a system of only a few hundred Suns' worth of light with a mass-to-light ratio near 3,400, is a galaxy. Omega Centauri, which is far brighter, is catalogued as a globular cluster, and some ultra-compact dwarfs remain ambiguous.<sup><a href="#g1r9">9</a></sup></p>
+          <p contenteditable="false">Physics also sets a floor. Gas can only cool and form stars efficiently in dark-matter halos of roughly 5 × 10⁷ M☉ at z ≈ 10.<sup><a href="#g1r10">10</a></sup> Once the universe was reionized, simulations suggest the smallest halos able to host galaxies were around 3 × 10⁸ M☉, and only halos above about 5 × 10⁹ M☉ reliably contain one. Below that sit starless “RELHICs”: halos holding gas but no stars.<sup><a href="#g1r11">11</a></sup> In 2025 astronomers reported the first strong example, <strong>Cloud-9</strong>. It has about a million solar masses of hydrogen in a halo of about five billion solar masses, with no detectable stars down to a limit of 10⁴ M☉.<sup><a href="#g1r12">12</a></sup> Objects like it are failed galaxies, and no galaxy count would include them.</p>
+          <p contenteditable="false">The same uncertainty applies to our own galaxy's surroundings. Models predict roughly 220 ± 50 satellite galaxies of the Milky Way above current detection limits.<sup><a href="#g1r13">13</a></sup> Other models predict as many as about 440.<sup><a href="#g1r14">14</a></sup> The 2026 DELVE census counts 49 known satellites above its completeness threshold and predicts 265 (+79/−47) in total.<sup><a href="#g1r15">15</a></sup> Most of our own galactic neighbours have not yet been found.</p>
 
-          <h3>Why the Number Keeps Changing</h3>
+          <h3>Weighing the Dark: Background Light</h3>
+          <p contenteditable="false"><span class="update-tag">Nov 2026</span> There is a second, independent way to check the total: measure all the light that galaxies have ever emitted and compare it with the light from galaxies already catalogued. From the inner solar system this is nearly impossible because sunlight scattered off interplanetary dust (zodiacal light) swamps the signal. NASA's New Horizons probe, more than 50 AU from the Sun, can make the measurement.</p>
+          <ul class="g1-list">
+            <li><strong>2021:</strong> Using archival LORRI images, Lauer et al. measured a cosmic optical background of about 16–19 nW m⁻² sr⁻¹, roughly twice the light from known galaxies.<sup><a href="#g1r16">16</a></sup> The press coverage read this as evidence for “hundreds of billions,” not trillions, of galaxies. NASA later issued a correction: the data <strong>“do not place a constraint on the total number of galaxies”</strong> but on the total light they emit.<sup><a href="#g1r17">17</a></sup></li>
+            <li><strong>2022:</strong> A dedicated observation found 16.37 ± 1.47 nW m⁻² sr⁻¹. That left an “anomalous” 8.06 ± 1.92 unaccounted for, as much again as all known galaxies.<sup><a href="#g1r18">18</a></sup></li>
+            <li><strong>2024:</strong> Postman et al. observed 16 fields and used Planck maps to correct for starlight scattered by dust in our own galaxy. They measured <strong>11.16 ± 1.65 nW m⁻² sr⁻¹</strong>, against 8.17 ± 1.18 expected from known galaxies, leaving a residual of 2.99 ± 2.03, which is consistent with zero. In their words, the “simplest interpretation” is that the background is entirely due to galaxies.<sup><a href="#g1r19">19</a></sup></li>
+          </ul>
+          <p contenteditable="false">Gamma rays point the same way. High-energy photons from distant blazars are absorbed when they collide with background starlight on the way to us, so the amount of dimming acts as a measure of that light. Fermi-LAT used 739 blazars and one gamma-ray burst to reconstruct cosmic star formation over 90% of cosmic history, finding a peak near z ≈ 2.<sup><a href="#g1r21">21</a></sup> A 2026 update with 1,576 blazars detects the effect at about 23σ, consistent with galaxy counts and with New Horizons (preprint).<sup><a href="#g1r22">22</a></sup> Deep galaxy counts also converge: the faintest galaxies add less than 5–10% to the optical background, even though they are the most numerous.<sup><a href="#g1r20">20</a></sup></p>
+          <p contenteditable="false"><strong>The lesson is that faint galaxies are numerous but contribute little light.</strong> The background light is now accounted for, but it cannot tell 300 billion galaxies from 2 trillion, because the extra dwarfs would add almost nothing to it. One puzzle remains: New Horizons ultraviolet data still show more far-UV background than galaxies appear to supply. Two 2026 preprints attribute only about 25–30% of it to extragalactic light.<sup><a href="#g1r23">23</a></sup></p>
 
-          <p contenteditable="false">The count is not a single measurement — it is a model-dependent inference. When Conselice's team reached 2 trillion in 2016, they were not directly observing that many galaxies; they were extrapolating from what Hubble could see and modeling the dark, undetected population. Each revision in our cosmological models or observational tools produces a new number. </p>
+          <h3>The Edge of the Census: JWST</h3>
+          <p contenteditable="false"><span class="update-tag">Nov 2026</span> JWST has pushed the census back to within 300 million years of the Big Bang. The current spectroscopic record is <strong>MoM-z14 at z = 14.44</strong>, seen about 280 million years after the Big Bang.<sup><a href="#g1r28">28</a></sup> Its discovery team estimates that bright galaxies like it are about 182 times (+329/−105) more common than pre-JWST models predicted.<sup><a href="#g1r29">29</a></sup> The previous record holder, JADES-GS-z14-0, has been pinned by ALMA to z = 14.1793.<sup><a href="#g1r30">30</a></sup></p>
+          <p contenteditable="false">That excess of early galaxies has limits. A 2026 search of more than 0.6 deg² of JWST imaging (McLeod et al., preprint) finds galaxy density about 12 times lower above z ≈ 12.5 than at 9.5–12.5. Only two candidates lie beyond z ≈ 14.5, and none at z ≥ 16.<sup><a href="#g1r31">31</a></sup> An October 2026 community review puts the decline at about sevenfold between z = 9 and z = 14. It lists bursty star formation, low dust, higher star-formation efficiency, a top-heavy initial mass function and hidden black holes as possible explanations.<sup><a href="#g1r32">32</a></sup> These bright early galaxies are a tiny fraction of the total. Whether the early universe made <em>more</em> galaxies or simply made some of them <em>brighter sooner</em> is still open.</p>
+          <p contenteditable="false">The edge of the census also attracts impostors. “Capotauro,” a candidate galaxy at z ≈ 32, turned out in 2026 to be a Milky Way brown dwarf about 730 parsecs away at roughly 350 K. Its motion across the sky, about 37.6 milliarcseconds per year, gave it away.<sup><a href="#g1r33">33</a></sup> Other JWST sources are hard to classify: the compact “little red dots” number in the hundreds (341 in one compilation), and it is unclear whether they are galaxies, black holes or both.<sup><a href="#g1r34">34</a></sup></p>
+          <p contenteditable="false">Reionization offers a third, indirect census. Lensed fields show the galaxy luminosity function still rising steeply (α ≈ −2) down to very faint galaxies (UV magnitude about −13) at z ≈ 9–15. Galaxies fainter than about −16 may produce more than half of all star formation at z ≈ 12.<sup><a href="#g1r24">24</a></sup> Dwarf galaxies also emit ionizing photons efficiently; Atek et al. measured about four times the usual rate.<sup><a href="#g1r25">25</a></sup> Taken at face value, these galaxies produce <em>more</em> ionizing photons than reionization needs, a tension called the “photon budget crisis.”<sup><a href="#g1r26">26</a></sup> A proposed 2025 resolution invokes clumpy gas and escape fractions near 5% (preprint).<sup><a href="#g1r27">27</a></sup> Either way, the faint majority must be there.</p>
 
-          <p contenteditable="false"><span class="update-tag">Nov 2026</span> JWST is already complicating things further: at z ≈ 10–14 it is finding <strong>far more</strong> luminous galaxies than pre-launch models predicted.<sup>13</sup> But the effect on the total count should not be overstated. These bright objects are a tiny fraction of all galaxies, and the total is dominated by faint dwarfs that JWST still cannot fully census. A large 2026 search across more than 0.6 square degrees of JWST imaging (McLeod et al., preprint) also found that galaxy abundance falls off steeply beyond z ≈ 12, with a dearth of candidates beyond z ≈ 14.5 — suggesting the early excess has limits.<sup>57</sup> Whether the early universe made more galaxies overall, or simply made some of them brighter sooner, remains open.</p>
+          <h3>The Next Census</h3>
+          <p contenteditable="false"><span class="update-tag">Nov 2026</span> JWST goes deep over small areas, and the new wide surveys cover large areas. Together they will improve the statistics that every total-count extrapolation depends on. Even the largest of them will catalogue only a few percent of the estimated total.</p>
+          <div class="g1-tablewrap">
+            <table class="g1-t">
+              <thead><tr><th>Survey</th><th>Status, Nov 2026</th><th>Galaxies</th></tr></thead>
+              <tbody>
+                <tr><td>Euclid (ESA)</td><td>Quick Release Q1 in March 2025. DR1-Foundation (~1,900 deg²) scheduled for 12 Nov 2026, full DR1 in mid-2027<sup><a href="#g1r39">39</a></sup></td><td>26 million in Q1; &gt;1.5 billion expected over 14,000 deg²<sup><a href="#g1r38">38</a></sup></td></tr>
+                <tr><td>Vera C. Rubin LSST</td><td>Ten-year survey began 30 June 2026<sup><a href="#g1r41">41</a></sup>; Early Data Preview 2 (~3,000 deg²) released July 2026<sup><a href="#g1r42">42</a></sup></td><td>~10 million in its first image; ~20 billion expected<sup><a href="#g1r40">40</a></sup></td></tr>
+                <tr><td>Nancy Grace Roman</td><td>Launched 30 Aug 2026; science operations expected in early 2027<sup><a href="#g1r43">43</a></sup></td><td>~620 million galaxy shapes, ~19 million grism redshifts<sup><a href="#g1r44">44</a></sup></td></tr>
+                <tr><td>SPHEREx</td><td>Launched March 2025; first 102-colour all-sky map completed December 2025<sup><a href="#g1r45">45</a></sup></td><td>&gt;450 million<sup><a href="#g1r45">45</a></sup></td></tr>
+                <tr><td>DESI</td><td>Five-year survey finished 15 April 2026; extended to 2028<sup><a href="#g1r47">47</a></sup></td><td>&gt;47 million spectra; ~63 million targeted<sup><a href="#g1r47">47</a></sup></td></tr>
+                <tr><td>4MOST (ESO)</td><td>First light 18 Oct 2025<sup><a href="#g1r48">48</a></sup></td><td>&gt;25 million objects over five years<sup><a href="#g1r48">48</a></sup></td></tr>
+              </tbody>
+            </table>
+          </div>
 
           <div class="fact-card">
             <p class="fact-card__label"><span class="update-tag">Nov 2026</span> Dark Energy Complication — DESI 2025–2026</p>
-            <p>The DESI (Dark Energy Spectroscopic Instrument) survey's March 2025 analysis used nearly <strong>15 million galaxies and quasars</strong> spanning 11 billion years of cosmic history. It suggested dark energy may have been stronger in the past and is now weakening; depending on which external datasets (cosmic microwave background, supernovae, weak lensing) were combined, the preference ranged from <strong>2.8 to 4.2 sigma</strong> — suggestive, but short of the 5-sigma discovery threshold.<sup>58</sup> The picture remains unsettled: in April 2026 DESI finished mapping its entire planned survey area ahead of schedule (more than 47 million galaxies and quasars), with results from the full five-year dataset expected in 2027,<sup>59</sup> and a July 2026 full-shape analysis of the Lyman-alpha forest produced a central value that shifted back toward the standard model.<sup>60</sup> If evolving dark energy is confirmed, this would alter the standard Lambda-CDM cosmological model — the very framework used to count galaxies across cosmic time. A weakening dark energy changes how we model the universe's expansion history, which in turn changes how we extrapolate galaxy counts from what we observe to what we cannot see.</p>
+            <p>DESI's March 2025 analysis used nearly <strong>15 million galaxies and quasars</strong> covering 11 billion years. It suggested dark energy may have been stronger in the past and is now weakening. Depending on which external data (cosmic microwave background, supernovae) were combined, the preference ranged from <strong>2.8 to 4.2 sigma</strong>, below the 5-sigma threshold for a discovery.<sup><a href="#g1r46">46</a></sup> The picture remains unsettled. DESI finished its planned five-year map in April 2026 with more than 47 million galaxies and quasars, and full-survey results are expected in 2027.<sup><a href="#g1r47">47</a></sup> A July 2026 Lyman-alpha analysis also moved back toward the standard model.<sup><a href="#g1r52">52</a></sup> Dark energy matters for this question because the expansion history converts what we observe into volumes and epochs. Changing it changes every extrapolation from the galaxies we see to the ones we don't.</p>
           </div>
 
+          <h3>A Number That Changes With Time</h3>
+          <p contenteditable="false">The count is not fixed even in principle. Because cosmic expansion is accelerating, there is a cosmic event horizon about 16 billion light-years away. Light that galaxies beyond about z ≈ 1.8 emit today will never reach us, even though we still see their older light. The observable universe itself extends about 46 billion light-years.<sup><a href="#g1r49">49</a></sup> Over the very long term, within roughly 10¹¹ years, every galaxy outside our gravitationally bound Local Group will fade from view. Their images effectively freeze at the ages we last saw them.<sup><a href="#g1r50">50</a></sup> For a few hundred billion years, then, the answer to “how many galaxies?” is mostly a question about the observer.</p>
+          <p contenteditable="false">For scale, ESA estimates the number of stars in the observable universe at between 10²² and 10²⁴.<sup><a href="#g1r51">51</a></sup></p>
+
           <div class="pull-quote">
-            <p>"The question of how many galaxies exist remains an active area where new observations can still shift the numbers — a frontier still in negotiation between measurement and model."</p>
+            <p>"The two-trillion figure is less a census than a statement about the faint end, an estimate of how many small galaxies the universe made, set against the limits of what can be seen."</p>
             <cite>— Synthesis of current literature</cite>
           </div>
+
+          <h3>For Researchers: Key Values at a Glance</h3>
+          <div class="g1-tablewrap">
+            <table class="g1-t">
+              <thead><tr><th>Quantity</th><th>Value</th><th>Reference</th></tr></thead>
+              <tbody>
+                <tr><td>Total galaxies, M* ≥ 10⁶ M☉, z &lt; 8</td><td>2.0 (+0.7/−0.6) × 10¹² (alt. methods 1.2–2.8 × 10¹²)</td><td>Conselice+16, ApJ 830, 83<sup><a href="#g1r7">7</a></sup></td></tr>
+                <tr><td>All-sky count at HUDF depth</td><td>≈ 2.5 × 10¹¹</td><td>Conselice+16<sup><a href="#g1r7">7</a></sup></td></tr>
+                <tr><td>Sensitivity to mass floor / z<sub>max</sub></td><td>×7 for 10⁵ M☉; +65% to z = 12</td><td>Conselice+16<sup><a href="#g1r7">7</a></sup></td></tr>
+                <tr><td>Cosmic optical background (LORRI, 0.6 µm)</td><td>11.16 ± 1.65 nW m⁻² sr⁻¹; residual 2.99 ± 2.03</td><td>Postman+24, ApJ 972, 95<sup><a href="#g1r19">19</a></sup></td></tr>
+                <tr><td>Integrated galaxy light, 0.1–8 µm</td><td>24 ± 4 nW m⁻² sr⁻¹</td><td>Driver+16, ApJ 827, 108<sup><a href="#g1r20">20</a></sup></td></tr>
+                <tr><td>Faint-end slope, UV LF</td><td>α = −2.28 ± 0.10 (z ≈ 9) to −1.53 ± 0.03 (z ≈ 2); α ≈ −2.0 to −2.1 to M<sub>UV</sub> ≈ −13 at z ≈ 9–15</td><td>Bouwens+22; Chemerynska+25<sup><a href="#g1r24">24</a></sup></td></tr>
+                <tr><td>Highest spectroscopic redshift</td><td>z = 14.44 (MoM-z14)</td><td>Naidu+26, OJAp<sup><a href="#g1r29">29</a></sup></td></tr>
+                <tr><td>High-z decline</td><td>~12× fewer at z &gt; 12.5 vs 9.5–12.5; 2 candidates z &gt; 14.5</td><td>McLeod+26 (preprint)<sup><a href="#g1r31">31</a></sup></td></tr>
+                <tr><td>Milky Way satellites</td><td>49 known above threshold; 265 (+79/−47) predicted</td><td>DELVE 2026, ApJ 1000, 87<sup><a href="#g1r15">15</a></sup></td></tr>
+                <tr><td>Largest JWST catalogue</td><td>784,016 sources, 0.54 deg², ~28 AB</td><td>Shuntov+25, A&amp;A 704, A339<sup><a href="#g1r37">37</a></sup></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <details class="g1-more" open>
+            <summary>Section 1 references (52)</summary>
+            <ol class="g1-refs">
+              <li id="g1r1">Hubble, E. (1934). The Distribution of Extra-Galactic Nebulae. <em>ApJ</em> 79, 8. — <a href="https://ui.adsabs.harvard.edu/abs/1934ApJ....79....8H" target="_blank" rel="noopener">ADS</a></li>
+              <li id="g1r2">Williams, R. E. et al. (1996). The Hubble Deep Field. <em>AJ</em> 112, 1335; NASA, Hubble's Deep Fields. — <a href="https://arxiv.org/abs/astro-ph/9607174" target="_blank" rel="noopener">arXiv</a> · <a href="https://science.nasa.gov/mission/hubble/science/universe-uncovered/hubble-deep-fields/" target="_blank" rel="noopener">NASA</a></li>
+              <li id="g1r3">NASA (1998). The Universe “Down Under” Is the Latest Target for Hubble's Deep View. — <a href="https://science.nasa.gov/missions/hubble/the-universe-down-under-is-the-latest-target-for-hubbles-latest-deep-view/" target="_blank" rel="noopener">science.nasa.gov</a></li>
+              <li id="g1r4">Beckwith, S. V. W. et al. (2006). The Hubble Ultra Deep Field. <em>AJ</em> 132, 1729. — <a href="https://arxiv.org/abs/astro-ph/0607632" target="_blank" rel="noopener">arXiv</a></li>
+              <li id="g1r5">Illingworth, G. D. et al. (2013). The HST eXtreme Deep Field (XDF). <em>ApJS</em>; NASA (2012) release. — <a href="https://arxiv.org/abs/1305.1931" target="_blank" rel="noopener">arXiv</a> · <a href="https://science.nasa.gov/missions/hubble/hubble-goes-to-the-extreme-to-assemble-farthest-ever-view-of-the-universe/" target="_blank" rel="noopener">NASA</a></li>
+              <li id="g1r6">NASA (2019). Hubble Astronomers Assemble Wide View of the Evolving Universe. — <a href="https://science.nasa.gov/missions/hubble/hubble-astronomers-assemble-wide-view-of-the-evolving-universe/" target="_blank" rel="noopener">science.nasa.gov</a></li>
+              <li id="g1r7">Conselice, C. J., Wilkinson, A., Duncan, K. &amp; Mortlock, A. (2016). The Evolution of Galaxy Number Density at z &lt; 8 and Its Implications. <em>ApJ</em> 830, 83. doi:10.3847/0004-637X/830/2/83 — <a href="https://arxiv.org/abs/1607.03909" target="_blank" rel="noopener">arXiv:1607.03909</a></li>
+              <li id="g1r8">NASA (2016). Hubble Reveals Observable Universe Contains 10 Times More Galaxies Than Previously Thought. — <a href="https://science.nasa.gov/missions/hubble/hubble-reveals-observable-universe-contains-10-times-more-galaxies-than-previously-thought/" target="_blank" rel="noopener">science.nasa.gov</a></li>
+              <li id="g1r9">Willman, B. &amp; Strader, J. (2012). “Galaxy,” Defined. <em>AJ</em>. — <a href="https://arxiv.org/abs/1203.2608" target="_blank" rel="noopener">arXiv:1203.2608</a></li>
+              <li id="g1r10">Greif, T. H. et al. (2008). The First Galaxies: Assembly, Cooling and the Onset of Turbulence. <em>MNRAS</em>. — <a href="https://arxiv.org/abs/0803.2237" target="_blank" rel="noopener">arXiv:0803.2237</a></li>
+              <li id="g1r11">Benítez-Llambay, A. &amp; Frenk, C. (2020). The Detailed Structure and the Onset of Galaxy Formation in Low-Mass Gaseous Dark Matter Haloes. <em>MNRAS</em>. doi:10.1093/mnras/staa2698 — <a href="https://arxiv.org/abs/2004.06124" target="_blank" rel="noopener">arXiv:2004.06124</a></li>
+              <li id="g1r12">Anand, G. S. et al. (2025). The First RELHIC? Cloud-9 Is a Starless Gas Cloud. <em>ApJL</em> 993, L55. — <a href="https://ui.adsabs.harvard.edu/abs/2025ApJ...993L..55A/abstract" target="_blank" rel="noopener">ADS</a></li>
+              <li id="g1r13">Nadler, E. O. et al. (2020). Milky Way Satellite Census II. <em>ApJ</em> 893, 48. — <a href="https://arxiv.org/abs/1912.03303" target="_blank" rel="noopener">arXiv:1912.03303</a></li>
+              <li id="g1r14">Manwadkar, V. &amp; Kravtsov, A. V. (2022). Forward-modelling the Luminosity, Distance, and Size Distributions of the Milky Way Satellites. <em>MNRAS</em>. — <a href="https://arxiv.org/abs/2112.04511" target="_blank" rel="noopener">arXiv:2112.04511</a></li>
+              <li id="g1r15">DELVE Collaboration (2026). Milky Way Satellite Galaxy Census I. <em>ApJ</em> 1000, 87. — <a href="https://arxiv.org/abs/2509.12313" target="_blank" rel="noopener">arXiv:2509.12313</a></li>
+              <li id="g1r16">Lauer, T. R. et al. (2021). New Horizons Observations of the Cosmic Optical Background. <em>ApJ</em> 906, 77. — <a href="https://iopscience.iop.org/article/10.3847/1538-4357/abc881" target="_blank" rel="noopener">IOPscience</a></li>
+              <li id="g1r17">NASA. New Horizons Spacecraft Answers Question: How Dark Is Space? (corrected release). — <a href="https://science.nasa.gov/missions/hubble/new-horizons-spacecraft-answers-question-how-dark-is-space/" target="_blank" rel="noopener">science.nasa.gov</a></li>
+              <li id="g1r18">Lauer, T. R. et al. (2022). Anomalous Flux in the Cosmic Optical Background Detected with New Horizons. <em>ApJL</em> 927, L8. — <a href="https://iopscience.iop.org/article/10.3847/2041-8213/ac573d" target="_blank" rel="noopener">IOPscience</a></li>
+              <li id="g1r19">Postman, M. et al. (2024). New Synoptic Observations of the Cosmic Optical Background with New Horizons. <em>ApJ</em> 972, 95. — <a href="https://iopscience.iop.org/article/10.3847/1538-4357/ad5ffc" target="_blank" rel="noopener">IOPscience</a> · <a href="https://arxiv.org/abs/2407.06273" target="_blank" rel="noopener">arXiv</a></li>
+              <li id="g1r20">Driver, S. P. et al. (2016). Measurements of Extragalactic Background Light from the Far UV to the Far IR from Deep Ground- and Space-based Galaxy Counts. <em>ApJ</em> 827, 108. — <a href="https://orca.cardiff.ac.uk/id/eprint/104320/1/Driver_2016_ApJ_827_108.pdf" target="_blank" rel="noopener">PDF</a></li>
+              <li id="g1r21">Fermi-LAT Collaboration (2018). A Gamma-Ray Determination of the Universe's Star Formation History. <em>Science</em> 362, 1031. — <a href="https://pubmed.ncbi.nlm.nih.gov/30498122/" target="_blank" rel="noopener">PubMed</a> · <a href="https://www.nasa.gov/universe/nasas-fermi-traces-the-history-of-starlight-across-the-cosmos/" target="_blank" rel="noopener">NASA</a></li>
+              <li id="g1r22">Banerjee, B. et al. (2026). A New Measurement of the Extragalactic Background Light Using 15 Years of Fermi-LAT Data. Preprint. — <a href="https://arxiv.org/html/2604.09139v1" target="_blank" rel="noopener">arXiv:2604.09139</a></li>
+              <li id="g1r23">Murthy, J. et al. (2026). New Horizons Alice and GALEX constraints on the diffuse UV background. Preprints. — <a href="https://arxiv.org/html/2608.22231" target="_blank" rel="noopener">arXiv:2608.22231</a> · <a href="https://arxiv.org/abs/2607.20942" target="_blank" rel="noopener">arXiv:2607.20942</a></li>
+              <li id="g1r24">Bouwens, R. J. et al. (2022). z ~ 2–9 Galaxies Magnified by the Hubble Frontier Field Clusters II. <em>ApJ</em>; Chemerynska, I. et al. (2025). The First GLIMPSE of the Faint Galaxy Population at Cosmic Dawn. — <a href="https://arxiv.org/html/2205.11526v2" target="_blank" rel="noopener">arXiv:2205.11526</a> · <a href="https://arxiv.org/abs/2509.24881" target="_blank" rel="noopener">arXiv:2509.24881</a></li>
+              <li id="g1r25">Atek, H. et al. (2024). Most of the Photons That Reionized the Universe Came from Dwarf Galaxies. <em>Nature</em> 626, 975. — <a href="https://pubmed.ncbi.nlm.nih.gov/38418911/" target="_blank" rel="noopener">PubMed</a></li>
+              <li id="g1r26">Muñoz, J. B. et al. (2024). Reionization after JWST: A Photon Budget Crisis? <em>MNRAS Letters</em> 535, L37. — <a href="https://academic.oup.com/mnrasl/article/535/1/L37/7759714" target="_blank" rel="noopener">OUP</a></li>
+              <li id="g1r27">Austin, D. et al. (2025). Resolving the Ionizing Photon Budget Crisis with JWST/NIRCam HII Clumps. Preprint. — <a href="https://arxiv.org/abs/2512.10839" target="_blank" rel="noopener">arXiv:2512.10839</a></li>
+              <li id="g1r28">NASA (2026). NASA Webb Pushes Boundaries of Observable Universe Closer to Big Bang. — <a href="https://science.nasa.gov/missions/webb/nasa-webb-pushes-boundaries-of-observable-universe-closer-to-big-bang/" target="_blank" rel="noopener">science.nasa.gov</a></li>
+              <li id="g1r29">Naidu, R. P. et al. (2026). A Cosmic Miracle: A Remarkably Luminous Galaxy at z<sub>spec</sub> = 14.44 Confirmed with JWST. <em>Open Journal of Astrophysics</em>. — <a href="https://astro.theoj.org/article/156033-a-cosmic-miracle-a-remarkably-luminous-galaxy-at-_z_-sub-spec-sub-14-44-confirmed-with-jwst" target="_blank" rel="noopener">OJAp</a></li>
+              <li id="g1r30">Schouws, S. et al. (2024–25). Detection of [OIII] 88 µm in JADES-GS-z14-0 at z = 14.1793. <em>ApJ</em>. — <a href="https://arxiv.org/html/2409.20549v1" target="_blank" rel="noopener">arXiv:2409.20549</a></li>
+              <li id="g1r31">McLeod, D. J. et al. (2026). A Search for the First Galaxies across &gt;0.6 deg² of JWST Imaging. Preprint. — <a href="https://arxiv.org/html/2604.16666" target="_blank" rel="noopener">arXiv:2604.16666</a></li>
+              <li id="g1r32">Fontana, A. et al. (2026). Too Many or Too Bright? Status and Perspectives in the Study of the UV Luminosity Function at z ≥ 10. Review preprint. — <a href="https://arxiv.org/html/2610.12121" target="_blank" rel="noopener">arXiv:2610.12121</a></li>
+              <li id="g1r33">Liu et al. (2026). Capotauro is a nearby Y-type brown dwarf. Preprint. — <a href="https://ar5iv.labs.arxiv.org/html/2608.07461" target="_blank" rel="noopener">arXiv:2608.07461</a></li>
+              <li id="g1r34">Kocevski, D. D. et al. (2025). The Rise of Faint, Red AGN at z &gt; 4 (little red dots). <em>ApJ</em>. — <a href="https://arxiv.org/abs/2404.03576v3" target="_blank" rel="noopener">arXiv:2404.03576</a></li>
+              <li id="g1r35">CEERS Collaboration (2025). The CEERS Photometric and Physical Parameter Catalog. <em>ApJ</em>. — <a href="https://arxiv.org/html/2510.08743v1" target="_blank" rel="noopener">arXiv:2510.08743</a></li>
+              <li id="g1r36">JADES Team (2026). JADES DR5: thousands of galaxies at z &gt; 8. — <a href="https://jades-survey.github.io/high-redshift/jades-dr5-zgt8-sources/" target="_blank" rel="noopener">jades-survey.github.io</a></li>
+              <li id="g1r37">Shuntov, M. et al. (2025). COSMOS2025: The COSMOS-Web Galaxy Catalog. <em>A&amp;A</em> 704, A339. — <a href="https://arxiv.org/abs/2506.03243" target="_blank" rel="noopener">arXiv:2506.03243</a> · <a href="https://cosmos.astro.caltech.edu/news/88" target="_blank" rel="noopener">COSMOS team</a></li>
+              <li id="g1r38">ESA (2025). Euclid Opens Data Treasure Trove, Offers Glimpse of Deep Fields. — <a href="https://www.esa.int/articles/about-us/directorates/science/euclid/euclid-opens-data-treasure-trove-offers-glimpse-of-deep-fields" target="_blank" rel="noopener">esa.int</a></li>
+              <li id="g1r39">ESA (2026). Euclid DR1 Timeline. — <a href="https://www.cosmos.esa.int/web/euclid/dr1-timeline" target="_blank" rel="noopener">cosmos.esa.int</a></li>
+              <li id="g1r40">Rubin Observatory (2025). Ever-Changing Universe Revealed in First Imagery. — <a href="https://rubinobservatory.org/news/first-imagery-rubin" target="_blank" rel="noopener">rubinobservatory.org</a></li>
+              <li id="g1r41">Rubin Observatory (2026). Action! Rubin Begins Capturing the Greatest Cosmic Movie Ever Made. — <a href="https://rubinobservatory.org/news/action-rubin-lsst-begins" target="_blank" rel="noopener">rubinobservatory.org</a></li>
+              <li id="g1r42">Rubin Observatory (2026). Rubin Opens Deep Window on Famous Cosmic Field. — <a href="https://rubinobservatory.org/news/rubin-new-window-cosmos-field" target="_blank" rel="noopener">rubinobservatory.org</a></li>
+              <li id="g1r43">NASA (2026). NASA's Dark Universe-Seeking Nancy Grace Roman Space Telescope Launches. — <a href="https://www.nasa.gov/news-release/nasas-dark-universe-seeking-nancy-grace-roman-space-telescope-launches/" target="_blank" rel="noopener">nasa.gov</a></li>
+              <li id="g1r44">Roman @ IPAC. High-Latitude Wide-Area Survey. — <a href="https://roman.ipac.caltech.edu/page/hlwas" target="_blank" rel="noopener">roman.ipac.caltech.edu</a></li>
+              <li id="g1r45">NASA (2025). SPHEREx Completes First Cosmic Map Like No Other. — <a href="https://www.nasa.gov/missions/spherex/nasas-spherex-observatory-completes-first-cosmic-map-like-no-other/" target="_blank" rel="noopener">nasa.gov</a></li>
+              <li id="g1r46">Berkeley Lab (2025). New DESI Results Strengthen Hints That Dark Energy May Evolve. — <a href="https://newscenter.lbl.gov/2025/03/19/new-desi-results-strengthen-hints-that-dark-energy-may-evolve/" target="_blank" rel="noopener">newscenter.lbl.gov</a></li>
+              <li id="g1r47">DESI (2026). DESI Reaches Mapping Milestone, Surpassing Expectations. — <a href="https://www.desi.lbl.gov/2026/04/15/desi-reaches-mapping-milestone-surpassing-expectations/" target="_blank" rel="noopener">desi.lbl.gov</a></li>
+              <li id="g1r48">ESO (2025). 4MOST First Light. — <a href="https://www.eso.org/public/announcements/ann25007/" target="_blank" rel="noopener">eso.org</a></li>
+              <li id="g1r49">Davis, T. M. &amp; Lineweaver, C. H. (2004). Expanding Confusion: Common Misconceptions of Cosmological Horizons. <em>PASA</em> 21, 97. — <a href="https://arxiv.org/pdf/astro-ph/0310808" target="_blank" rel="noopener">arXiv</a></li>
+              <li id="g1r50">Loeb, A. (2002). The Long-Term Future of Extragalactic Astronomy. <em>Phys. Rev. D</em>. — <a href="https://ar5iv.arxiv.org/html/astro-ph/0107568" target="_blank" rel="noopener">arXiv:astro-ph/0107568</a></li>
+              <li id="g1r51">ESA. How Many Stars Are There in the Universe? — <a href="https://www.esa.int/Science_Exploration/Space_Science/Herschel/How_many_stars_are_there_in_the_Universe" target="_blank" rel="noopener">esa.int</a></li>
+              <li id="g1r52">DESI (2026). New DESI DR2 Lyman-alpha Results Shed Light on Dark Energy. — <a href="https://www.desi.lbl.gov/2026/07/30/new-desi-dr2-lyman-alpha-results-shed-light-on-dark-energy/" target="_blank" rel="noopener">desi.lbl.gov</a></li>
+            </ol>
+          </details>
+
+          <p class="g1-cite"><strong>How to cite this section:</strong> “Total Estimated Number of Galaxies,” <em>Cosmic Perspectives</em>, Section 1, updated November 2026. https://cosmicperspectives.elyriandoctrine.com/#galaxies. Preprints are marked as such, and values are taken from the primary papers where available.</p>
+
+<script>
+(function(){
+ var sel=document.getElementById('g1-field'),comp=document.getElementById('g1-comp'),cv=document.getElementById('g1-compv'),fl=document.getElementById('g1-floor');
+ if(!sel)return;
+ var SKY=41253*3600;
+ function fmt(n){if(n>=1e12)return(n/1e12).toFixed(n>=1e13?0:1)+' trillion';if(n>=1e9)return Math.round(n/1e9)+' billion';if(n>=1e6)return Math.round(n/1e6)+' million';return Math.round(n).toLocaleString()}
+ function run(){var p=sel.value.split('|'),c=+p[0],a=+p[1],f=+comp.value/100;cv.textContent=comp.value+'%';
+  var sky=c/a*SKY,tot=sky/f*(fl.checked?7:1);
+  document.getElementById('g1-sky').textContent=fmt(sky);
+  document.getElementById('g1-tot').textContent=fmt(tot);
+  document.getElementById('g1-per').textContent=Math.round(c/a).toLocaleString()}
+ sel.addEventListener('change',run);comp.addEventListener('input',run);fl.addEventListener('change',run);run();
+})();
+</script>
         </section>
 
         <!-- ════════════ SECTION 2: METHODS -->
@@ -1673,7 +1900,7 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
  var tb=document.querySelector('[data-theme-toggle]');if(tb)tb.addEventListener('click',function(){theme=theme==='dark'?'light':'dark';root.setAttribute('data-theme',theme)});
  var nt=document.getElementById('nav-toggle'),nav=document.getElementById('main-nav');if(nt&&nav)nt.addEventListener('click',function(){var o=nav.classList.toggle('is-open');nav.classList.toggle('open',o);nt.setAttribute('aria-expanded',o)});
  var open={galaxies:1,top:1,members:1};
- document.querySelectorAll('a[href^="#"]').forEach(function(a){var id=a.getAttribute('href').slice(1);if(id&&!open[id]){a.classList.add('is-locked');a.addEventListener('click',function(e){e.preventDefault();sessionStorage.setItem('cp_want',id);document.getElementById('members').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('key').focus({preventScroll:true})},450)})}});
+ document.querySelectorAll('a[href^="#"]').forEach(function(a){var id=a.getAttribute('href').slice(1);if(id&&!open[id]&&id.indexOf('g1')!==0){a.classList.add('is-locked');a.addEventListener('click',function(e){e.preventDefault();sessionStorage.setItem('cp_want',id);document.getElementById('members').scrollIntoView({behavior:'smooth'});setTimeout(function(){document.getElementById('key').focus({preventScroll:true})},450)})}});
  var msg=document.getElementById('msg');
  function say(t,c){msg.textContent=t;msg.className='gate__msg '+(c||'')}
  function unlock(key,quiet){
