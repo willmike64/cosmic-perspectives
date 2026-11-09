@@ -1463,6 +1463,13 @@
 #unlock{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem}
 #key{flex:1 1 220px;min-width:0;font:400 1rem var(--font-mono);padding:.75rem .9rem;border-radius:10px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text)}
 #key:focus{outline:2px solid var(--color-accent);outline-offset:1px}
+#circle{display:grid;grid-template-columns:1fr 1fr auto;gap:.6rem;margin-top:.8rem}
+#circle input{min-width:0;font:400 1rem var(--font-body);padding:.75rem .9rem;border-radius:10px;border:1px solid var(--color-border);background:var(--color-bg);color:var(--color-text)}
+#circle input:focus{outline:2px solid var(--color-accent);outline-offset:1px}
+@media(max-width:640px){#circle{grid-template-columns:1fr}}
+.gate__or{text-align:center;font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:.2em;text-transform:uppercase;color:var(--color-text-muted,#9aa);margin:.4rem 0}
+.gate__price{font-size:var(--text-sm)!important;color:var(--color-text-muted,#9aa)}
+.gate__card p.gate__fine{font-size:var(--text-sm)!important;margin:.5rem 0 0}
 .gate__btn{display:inline-block;font:600 .95rem var(--font-body);padding:.75rem 1.2rem;border-radius:999px;border:0;background:var(--color-accent);color:#111;cursor:pointer;text-decoration:none}
 .gate__btn:hover{background:var(--color-accent-hover)}
 .gate__btn--ghost{background:transparent;color:var(--color-accent);border:1px solid var(--color-accent)}
@@ -1862,10 +1869,10 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
 <section class="section" id="members">
  <div class="gate">
   <p class="gate__eyebrow">Sections 2–12 · Sources</p>
-  <h2 class="gate__title">The rest of the research is for paid subscribers</h2>
-  <p>You’ve just read the first section, and it’s free for everyone. The other eleven sections and all 147 sources are part of a paid subscription to my Substack, <em>Let’s Talk About Anything and Everything</em>. Paid subscriptions give me the time to keep reading, checking, and updating this work, and I’m grateful for every one.</p>
+  <h2 class="gate__title">The rest of the research is for members</h2>
+  <p>You’ve just read the first section, and it’s free for everyone. The other eleven sections and all 147 sources are included with either membership: a paid subscription to my Substack, <em>Let’s Talk About Anything and Everything</em>, or the Sovereign Circle at Daily Ignition. Memberships give me the time to keep reading, checking, and updating this work, and I’m grateful for every one.</p>
   <div class="gate__card">
-   <h3>Already a paid subscriber?</h3>
+   <h3>Paid Substack subscriber?</h3>
    <p>Your reader key is at the bottom of each paid post. Enter it once, and this device will remember it.</p>
    <form id="unlock" autocomplete="off">
     <input id="key" name="key" type="text" inputmode="text" autocapitalize="none" spellcheck="false" placeholder="your-reader-key" aria-label="Reader key" required>
@@ -1873,9 +1880,23 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
    </form>
    <p class="gate__msg" id="msg" role="status" aria-live="polite"></p>
   </div>
+  <p class="gate__or">or</p>
+  <div class="gate__card">
+   <h3>Sovereign Circle member?</h3>
+   <p>Sign in with your Daily Ignition account. It’s the same email and password you use at dailyignition.app.</p>
+   <form id="circle" autocomplete="on">
+    <input id="ci-email" type="email" autocomplete="email" placeholder="Email" aria-label="Email" required>
+    <input id="ci-pass" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password" required>
+    <button type="submit" class="gate__btn">Sign in</button>
+   </form>
+   <p class="gate__msg" id="ci-msg" role="status" aria-live="polite"></p>
+   <p class="gate__fine"><a class="gate__link" href="https://dailyignition.app/auth">Forgot your password?</a> Reset it at Daily Ignition, then come back here.</p>
+  </div>
   <div class="gate__soft">
-   <p><strong>Not ready to subscribe?</strong> That’s completely fine. Section 1 stays open here, and the free newsletter is always open too. If you’d like to support the work later, the option will be waiting.</p>
-   <p class="gate__links"><a class="gate__btn gate__btn--ghost" href="https://elyriansun.substack.com/subscribe">See subscription options</a> <a class="gate__link" href="https://elyriansun.substack.com">Read the free newsletter</a></p>
+   <p><strong>Not a member yet?</strong> Either membership opens everything here:</p>
+   <p class="gate__price">Sovereign Circle at Daily Ignition: $2.99 a month or $24.99 a year. Paid Substack subscription: $8 a month or $30 a year.</p>
+   <p class="gate__links"><a class="gate__btn gate__btn--ghost" href="https://dailyignition.app/profile#sovereign-circle">Join the Sovereign Circle</a> <a class="gate__btn gate__btn--ghost" href="https://elyriansun.substack.com/subscribe">Subscribe on Substack</a></p>
+   <p>Not ready? That’s completely fine. Section 1 stays open here, and <a href="https://elyriansun.substack.com" style="color:inherit;text-decoration:underline">the free newsletter</a> is always open too.</p>
   </div>
   <p class="gate__eyebrow" style="margin-top:2.2rem">What’s inside</p>
   <ul class="gate__list"><li><span class="lk">✦</span><span class="n">2</span>Methods of Estimation</li><li><span class="lk">✦</span><span class="n">3</span>JWST Latest Discoveries</li><li><span class="lk">✦</span><span class="n">4</span>Fine-Tuning &amp; Multiverse</li><li><span class="lk">✦</span><span class="n">5</span>Consciousness &amp; Cosmos</li><li><span class="lk">✦</span><span class="n">6</span>Divinity &amp; the Cosmos</li><li><span class="lk">✦</span><span class="n">7</span>Native Traditions</li><li><span class="lk">✦</span><span class="n">8</span>Elyrian Convergence</li><li><span class="lk">✦</span><span class="n">9</span>The Epigenome</li><li><span class="lk">✦</span><span class="n">10</span>Hypoxia &amp; the Epigenome</li><li><span class="lk">✦</span><span class="n">11</span>The Convergence</li><li><span class="lk">✦</span><span class="n">12</span>The Brain as Complex System</li><li><span class="lk">✦</span><span class="n">·</span>Sources &amp; Further Reading (147)</li></ul>
@@ -1889,11 +1910,12 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
 <!-- ════════════════════════════════════════════ FOOTER -->
 <footer class="site-footer">
   <div class="container">
-    <p>Cosmic Perspectives · Updated November 2026 · by Michael L. Williams · <a href="https://elyriandoctrine.com">elyriandoctrine.com</a> · <a href="https://elyriansun.substack.com">Substack</a></p>
+    <p>Cosmic Perspectives · Updated November 2026 · by Michael L. Williams · <a href="https://elyriandoctrine.com">elyriandoctrine.com</a> · <a href="https://elyriansun.substack.com">Substack</a> · <a href="https://dailyignition.app">Daily Ignition</a></p>
   </div>
 </footer>
 
 <div id="opening">Opening the research…</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 (function(){
  var FN="https://leleqtxxlxhztgxlhvwq.supabase.co/functions/v1/cp-unlock";
@@ -1918,8 +1940,38 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
   }).catch(function(){document.getElementById('opening').style.display='none';say('Couldn’t reach the server just now. Please try again in a moment.','err')});
  }
  document.getElementById('unlock').addEventListener('submit',function(e){e.preventDefault();var k=document.getElementById('key').value.trim();if(!k)return;say('Checking…','ok');unlock(k,false)});
+ // Sovereign Circle sign-in (Daily Ignition accounts)
+ var CFN="https://leleqtxxlxhztgxlhvwq.supabase.co/functions/v1/cp-circle";
+ var sb=null;try{sb=window.supabase.createClient("https://sqhdjaplfgmgyqoixnjd.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxaGRqYXBsZmdtZ3lxb2l4bmpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzI3NjEsImV4cCI6MjA5MDEwODc2MX0.mwtvdY9UbNFbfJuoBhZJFMXkhPH8lroL3svZvZSD2wE",{auth:{storageKey:"sb-di-cp",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}})}catch(e){}
+ var cmsg=document.getElementById('ci-msg');
+ function csay(t,c){cmsg.textContent=t;cmsg.className='gate__msg '+(c||'')}
+ function showHtml(html){var want=location.hash.slice(1)||sessionStorage.getItem('cp_want')||'';sessionStorage.removeItem('cp_want');
+   if(want&&want!=='members'&&want!=='galaxies')history.replaceState(null,'','#'+want);
+   document.open();document.write(html);document.close();
+   if(want)setTimeout(function(){var el=document.getElementById(want);if(el)el.scrollIntoView()},400)}
+ function circle(token,quiet){
+  if(quiet)document.getElementById('opening').style.display='flex';
+  return fetch(CFN,{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+token},body:'{}'}).then(function(r){return r.json().then(function(d){return{s:r.status,d:d}})}).then(function(x){
+   if(x.s===200&&x.d.access&&x.d.html){showHtml(x.d.html);return}
+   document.getElementById('opening').style.display='none';
+   if(x.s===200&&x.d.access===false){csay('You’re signed in'+(x.d.email?' as '+x.d.email:'')+', but there’s no active Sovereign Circle membership on this account yet. You can join at Daily Ignition, then sign in here again.','err');if(sb)sb.auth.signOut();return}
+   if(!quiet)csay('That sign-in didn’t work. Please try again.','err');
+   if(sb)sb.auth.signOut();
+  }).catch(function(){document.getElementById('opening').style.display='none';csay('Couldn’t reach the server just now. Please try again in a moment.','err')});
+ }
+ document.getElementById('circle').addEventListener('submit',function(e){e.preventDefault();
+  if(!sb){csay('Sign-in couldn’t load. Please refresh the page and try again.','err');return}
+  var em=document.getElementById('ci-email').value.trim(),pw=document.getElementById('ci-pass').value;if(!em||!pw)return;
+  csay('Signing in…','ok');
+  sb.auth.signInWithPassword({email:em,password:pw}).then(function(res){
+   if(res.error||!res.data||!res.data.session){csay(/confirm/i.test(res.error&&res.error.message||'')?'Please confirm your email first, then sign in.':'That email and password didn’t match a Daily Ignition account. If you signed up with Google there, set a password at Daily Ignition first.','err');return}
+   csay('Checking your membership…','ok');circle(res.data.session.access_token,false)});
+ });
  var saved=localStorage.getItem('cp_reader_key');if(saved)unlock(saved,true);
- else if(location.hash&&!open[location.hash.slice(1)]){sessionStorage.setItem('cp_want',location.hash.slice(1));setTimeout(function(){document.getElementById('members').scrollIntoView()},200)}
+ else{
+  if(location.hash&&!open[location.hash.slice(1)]){sessionStorage.setItem('cp_want',location.hash.slice(1));setTimeout(function(){document.getElementById('members').scrollIntoView()},200)}
+  if(sb)sb.auth.getSession().then(function(r){var ses=r&&r.data&&r.data.session;if(ses)circle(ses.access_token,true)});
+ }
 })();
 </script>
 </body>
