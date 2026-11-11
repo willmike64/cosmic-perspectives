@@ -1,7 +1,8 @@
 /* Cosmic Perspectives — "Emergence" hero animation
-   A 10-second repeating cycle: a stellar nursery beside a spiral galaxy releases stardust,
-   the dust gathers into a human form, consciousness ignites, the form catches fire and
-   becomes a dancing fire spirit, and the spirit scatters as embers back into the cosmos.
+   A 14-second repeating cycle: a stellar nursery beside a spiral galaxy releases stardust;
+   the dust forms an Earth, then another, then Earths all across the cosmos. Stardust beings
+   pop up on every Earth, then all of them rise and stream into the flame woman (the artist's
+   own photograph, "Dancing Fire Spirit"), who dances and returns to the cosmos as embers.
    Pure canvas; no dependencies. Respects prefers-reduced-motion. */
 (function () {
   var root = document.querySelector('[data-emergence]');
@@ -9,10 +10,10 @@
   var canvas = root.querySelector('canvas');
   var ctx = canvas.getContext('2d');
   var caps = root.querySelectorAll('[data-cap]');
-  var LOOP = 10000;                       // ms
+  var LOOP = 14000;                       // ms
   var IMG_W = 1774, IMG_H = 887;          // backdrop native size (scene coordinates)
   var GAL = { x: 0.19 * IMG_W, y: 0.47 * IMG_H, r: 0.175 * IMG_W };
-  var FIG = { x: 0.5 * IMG_W, y: 0.53 * IMG_H, h: 0.62 * IMG_H };
+  var FIG = { x: 0.5 * IMG_W, y: 0.5 * IMG_H, h: 0.86 * IMG_H };     // the flame woman's frame
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---------- backdrop + rotating galaxy layer ----------
@@ -53,157 +54,101 @@
   };
   var hue = [SPR.teal, SPR.rose, SPR.gold, SPR.white];
 
-  // ---------- human form: sample points from a drawn silhouette ----------
-  var figGlow = null;
-  function figurePoints(n) {
+  // ---------- photographs: Earth (NASA, Apollo 17) and the flame woman (the artist's photo) ----------
+  var earthImg = new Image(); earthImg.src = root.getAttribute('data-earth') || 'earth.webp';
+  var flameImg = new Image(); flameImg.src = root.getAttribute('data-flame') || 'flame-woman.webp';
+  var FW = 450, FH = 884;                                   // flame-woman image size
+  function flameRect() { var h = FIG.h, w = h * FW / FH; return { x: FIG.x - w / 2, y: FIG.y - h / 2, w: w, h: h }; }
+  var flamePts = null;                                      // bright points of the flame, for the beings to fly to
+  function sampleFlame() {
+    if (!flameImg.naturalWidth) return;
+    var w = 150, h = Math.round(150 * FH / FW), c = document.createElement('canvas'); c.width = w; c.height = h;
+    var g = c.getContext('2d'); g.drawImage(flameImg, 0, 0, w, h);
+    var d = g.getImageData(0, 0, w, h).data, pts = [];
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) { var k = (y * w + x) * 4; if (d[k + 3] > 150 && d[k] > 200) pts.push([x / w, y / h]); }
+    flamePts = pts; assignFlameTargets();
+  }
+
+  // ---------- the Earths ----------
+  // x, y as fractions of the scene; r as a fraction of scene height; t = moment it emerges
+  var EARTHS = [
+    { x: 0.31, y: 0.42, r: 0.085, t: 0.12, n: 3 },
+    { x: 0.69, y: 0.6, r: 0.07, t: 0.22, n: 3 },
+    { x: 0.27, y: 0.74, r: 0.045, t: 0.29, n: 2 }, { x: 0.585, y: 0.24, r: 0.04, t: 0.31, n: 2 },
+    { x: 0.76, y: 0.3, r: 0.048, t: 0.32, n: 2 }, { x: 0.8, y: 0.76, r: 0.042, t: 0.34, n: 2 },
+    { x: 0.4, y: 0.86, r: 0.038, t: 0.35, n: 1 }, { x: 0.61, y: 0.84, r: 0.034, t: 0.36, n: 1 },
+    { x: 0.37, y: 0.14, r: 0.032, t: 0.37, n: 1 }, { x: 0.68, y: 0.12, r: 0.03, t: 0.38, n: 1 },
+    { x: 0.14, y: 0.22, r: 0.034, t: 0.39, n: 1 }, { x: 0.9, y: 0.5, r: 0.036, t: 0.39, n: 1 },
+    { x: 0.2, y: 0.55, r: 0.03, t: 0.4, n: 1 }, { x: 0.86, y: 0.16, r: 0.028, t: 0.41, n: 1 },
+    { x: 0.1, y: 0.82, r: 0.03, t: 0.41, n: 1 }
+  ].map(function (e) { return { x: e.x * IMG_W, y: e.y * IMG_H, r: e.r * IMG_H, t: e.t, n: e.n, rot: Math.random() * 6.28 }; });
+
+  // ---------- stardust being: a tiny human form sampled from a drawn silhouette ----------
+  var SIL = [];
+  (function () {
     var W = 240, H = 340, c = document.createElement('canvas'); c.width = W; c.height = H;
-    var g = c.getContext('2d'); g.fillStyle = '#fff'; g.strokeStyle = '#fff'; g.lineCap = 'round'; g.lineJoin = 'round';
+    var g = c.getContext('2d'); g.fillStyle = '#fff';
     function poly(pts) { g.beginPath(); g.moveTo(pts[0], pts[1]); for (var i = 2; i < pts.length; i += 2) g.lineTo(pts[i], pts[i + 1]); g.closePath(); g.fill(); }
-    function limb(x1, y1, x2, y2, w1, w2) {   // tapered limb
+    function limb(x1, y1, x2, y2, w1, w2) {
       var a = Math.atan2(y2 - y1, x2 - x1) + Math.PI / 2, c1 = Math.cos(a), s1 = Math.sin(a);
       poly([x1 + c1 * w1, y1 + s1 * w1, x2 + c1 * w2, y2 + s1 * w2, x2 - c1 * w2, y2 - s1 * w2, x1 - c1 * w1, y1 - s1 * w1]);
       g.beginPath(); g.arc(x1, y1, w1, 0, 6.2832); g.fill(); g.beginPath(); g.arc(x2, y2, w2, 0, 6.2832); g.fill();
     }
-    g.beginPath(); g.ellipse(120, 40, 15, 19, 0, 0, 6.2832); g.fill();               // head
-    limb(120, 56, 120, 70, 6, 7);                                                     // neck
-    g.beginPath(); g.moveTo(96, 78); g.bezierCurveTo(108, 70, 132, 70, 144, 78);      // shoulders → torso → hips
+    g.beginPath(); g.ellipse(120, 40, 17, 21, 0, 0, 6.2832); g.fill();
+    limb(120, 56, 120, 70, 7, 8);
+    g.beginPath(); g.moveTo(96, 78); g.bezierCurveTo(108, 70, 132, 70, 144, 78);
     g.bezierCurveTo(141, 110, 134, 132, 134, 150); g.bezierCurveTo(140, 168, 140, 180, 136, 190);
     g.lineTo(104, 190); g.bezierCurveTo(100, 180, 100, 168, 106, 150); g.bezierCurveTo(106, 132, 99, 110, 96, 78); g.fill();
-    limb(100, 82, 64, 56, 7.5, 5.5); limb(64, 56, 34, 22, 5.5, 4);                    // left arm, open and lifted
-    limb(140, 82, 176, 56, 7.5, 5.5); limb(176, 56, 206, 22, 5.5, 4);                 // right arm
-    g.beginPath(); g.ellipse(31, 18, 4.5, 6, -0.6, 0, 6.2832); g.fill();              // open hands
-    g.beginPath(); g.ellipse(209, 18, 4.5, 6, 0.6, 0, 6.2832); g.fill();
-    limb(112, 186, 108, 258, 10, 6.5); limb(108, 258, 106, 326, 6.5, 4.5);            // legs
-    limb(128, 186, 132, 258, 10, 6.5); limb(132, 258, 134, 326, 6.5, 4.5);
-    var d = g.getImageData(0, 0, W, H).data, inside = [], edge = [];
-    for (var y = 1; y < H - 1; y += 1) for (var x = 1; x < W - 1; x += 1) {
-      var k = (y * W + x) * 4 + 3; if (d[k] < 128) continue;
-      if (d[k - 4] < 128 || d[k + 4] < 128 || d[k - W * 4] < 128 || d[k + W * 4] < 128) edge.push([x, y]); else inside.push([x, y]);
-    }
-    // soft luminous body behind the dust
-    var gc = document.createElement('canvas'); gc.width = W + 80; gc.height = H + 80;
-    var gg = gc.getContext('2d'); gg.filter = 'blur(9px)'; gg.drawImage(c, 40, 40);
-    gg.filter = 'none'; gg.globalCompositeOperation = 'source-in'; gg.fillStyle = 'rgba(255,214,140,1)'; gg.fillRect(0, 0, gc.width, gc.height);
-    figGlow = { c: gc, w: (W + 80) / H * FIG.h, h: (H + 80) / H * FIG.h };
-    var pts = [];
-    for (var i = 0; i < n; i++) {
-      var src = (Math.random() < 0.45 ? edge : inside), p = src[(Math.random() * src.length) | 0];
-      pts.push({ x: FIG.x + (p[0] - W / 2 + Math.random() - .5) / H * FIG.h, y: FIG.y + (p[1] - H / 2 + Math.random() - .5) / H * FIG.h });
-    }
-    return pts;
-  }
-
-  // ---------- fire spirit: flowing flame ribbons (figure-local 240×340 space) ----------
-  // Modelled on a flame dancer: arms arched overhead into a loop, head tilted back,
-  // hair streaming behind, an S-curved body that pours down into the fire bed.
-  var RIBBONS = [
-    { w: [9, 8, 6, 5, 4.5, 5, 6, 7.5, 9], pts: [106,124, 86,86, 88,44, 108,14, 136,4, 162,20, 170,56, 160,96, 146,118] },   // arms, arched overhead
-    { w: [9, 7, 5.5, 4.5, 3.5, 2.5], pts: [112,122, 100,96, 102,62, 118,36, 136,26, 150,34] },                   // inner edge of the arch
-    { w: [10, 13, 13, 9], pts: [136,124, 141,104, 140,86, 133,72] },                                             // neck → head, face lifted
-    { w: [6, 5, 4, 2.5, 1.2], pts: [132,82, 112,70, 88,76, 68,96, 60,122] },                                    // streaming hair
-    { w: [15, 14, 12, 15, 18, 15, 14, 18, 26], pts: [140,118, 132,144, 120,172, 122,200, 138,224, 134,252, 122,282, 118,312, 120,344] }, // body S-curve
-    { w: [9, 8, 8, 9, 8, 10, 13], pts: [124,128, 110,156, 102,190, 110,222, 98,258, 106,298, 110,344] },          // trailing flame behind the body
-    { w: [5, 4, 2.5, 1], pts: [104,130, 80,156, 70,192, 84,224] },                                             // wisp off the shoulder
-    { w: [6, 4.5, 3, 1], pts: [144,220, 164,238, 170,266, 154,294] },                                          // wisp off the hip
-    { w: [4.5, 3, 0.8], pts: [136,4, 148,-12, 142,-30] }                                                       // flame tip above the hands
-  ];
-  var SEG = 14;
-  function spline(r) {   // Catmull-Rom through the control points, with interpolated widths
-    var p = r.pts, n = p.length / 2, out = [];
-    for (var i = 0; i < n - 1; i++) {
-      var i0 = Math.max(0, i - 1), i2 = i + 1, i3 = Math.min(n - 1, i + 2);
-      for (var j = 0; j < SEG; j++) {
-        var u = j / SEG, u2 = u * u, u3 = u2 * u;
-        function cr(a, b, c, d) { return 0.5 * (2 * b + (-a + c) * u + (2 * a - 5 * b + 4 * c - d) * u2 + (-a + 3 * b - 3 * c + d) * u3); }
-        out.push({ x: cr(p[i0 * 2], p[i * 2], p[i2 * 2], p[i3 * 2]), y: cr(p[i0 * 2 + 1], p[i * 2 + 1], p[i2 * 2 + 1], p[i3 * 2 + 1]), w: r.w[i] + (r.w[i + 1] - r.w[i]) * u });
-      }
-    }
-    out.push({ x: p[(n - 1) * 2], y: p[(n - 1) * 2 + 1], w: r.w[n - 1] });
-    return out;
-  }
-  var RS = RIBBONS.map(spline);
-  var RW = RS.map(function (s) { var L = 0; for (var i = 1; i < s.length; i++) L += Math.hypot(s[i].x - s[i - 1].x, s[i].y - s[i - 1].y) * (s[i].w + 2); return L; });
-  var RWsum = RW.reduce(function (a, b) { return a + b; }, 0);
-  var live = RS.map(function (s) { return s.map(function () { return { x: 0, y: 0, nx: 0, ny: 0, w: 0 }; }); });
-  // animate the ribbons: the flame sways more the higher it climbs, and the whole spirit dances
-  function animateSpirit(sec, energy) {
-    var lean = Math.sin(sec * 1.25) * 0.07 * energy, bob = Math.sin(sec * 2.5) * 3 * energy;
-    var ca = Math.cos(lean), sa = Math.sin(lean);
-    for (var r = 0; r < RS.length; r++) {
-      var s = RS[r], L = live[r];
-      for (var i = 0; i < s.length; i++) {
-        var h = clamp((342 - s[i].y) / 360), amp = (1 + 4.2 * h) * energy;
-        var dx = amp * (Math.sin(sec * 3.1 + s[i].y * 0.045 + r) + 0.3 * Math.sin(sec * 4.6 + s[i].y * 0.05 + r * 2));
-        var dy = amp * 0.35 * Math.sin(sec * 4.1 + s[i].x * 0.07 + r) - bob * h;
-        var lx = s[i].x + dx - 120, ly = s[i].y + dy - 342;      // pivot at the fire bed
-        L[i].x = 120 + lx * ca - ly * sa; L[i].y = 342 + lx * sa + ly * ca;
-        L[i].w = s[i].w * (0.88 + 0.18 * Math.sin(sec * 6 + i * 0.35 + r));
-      }
-      for (var k = 0; k < L.length; k++) {
-        var a = L[Math.max(0, k - 1)], b = L[Math.min(L.length - 1, k + 1)], tx = b.x - a.x, ty = b.y - a.y, tl = Math.hypot(tx, ty) || 1;
-        L[k].nx = -ty / tl; L[k].ny = tx / tl;
-      }
-    }
-  }
-  function LX(x) { return FIG.x + (x - 120) / 340 * FIG.h; }
-  function LY(y) { return FIG.y + (y - 170) / 340 * FIG.h; }
-  var FLAMES = [
-    [0, 0.6, 'rgba(190,40,10,.13)'], [0, 1.0, 'rgba(255,90,20,.2)'],
-    [0, 0.62, 'rgba(255,150,40,.42)'], [0, 0.34, 'rgba(255,215,120,.62)'], [0, 0.13, 'rgba(255,250,225,.9)']
-  ];
-  var WIDEN = [2.4, 1.6, 1.0, 0.58, 0.26];
-  function drawRibbon(L, mult, color) {
-    ctx.beginPath();
-    for (var i = 0; i < L.length; i++) { var p = L[i], w = p.w * mult; i ? ctx.lineTo(X(LX(p.x + p.nx * w)), Y(LY(p.y + p.ny * w))) : ctx.moveTo(X(LX(p.x + p.nx * w)), Y(LY(p.y + p.ny * w))); }
-    for (var j = L.length - 1; j >= 0; j--) { var q = L[j], v = q.w * mult; ctx.lineTo(X(LX(q.x - q.nx * v)), Y(LY(q.y - q.ny * v))); }
-    ctx.closePath(); ctx.fillStyle = color; ctx.fill();
-  }
-  var TONGUES = []; for (var tq = 0; tq < 15; tq++) TONGUES.push({ x: 62 + tq * 8.5 + (tq % 2) * 3, h: 22 + ((tq * 37) % 5) * 10 + (tq > 4 && tq < 11 ? 18 : 0), w: 10 + (tq % 3) * 4, ph: tq * 1.7 });
-  function drawFireBed(sec, a) {
-    for (var i = 0; i < TONGUES.length; i++) {
-      var f = TONGUES[i], fl = 0.7 + 0.3 * Math.sin(sec * 8 + f.ph), h = f.h * fl, sw = Math.sin(sec * 4 + f.ph) * 6;
-      var bx = X(LX(f.x)), by = Y(LY(344)), tx = X(LX(f.x + sw)), ty = Y(LY(344 - h)), hw = f.w / 340 * FIG.h * sc;
-      var g = ctx.createLinearGradient(bx, by, tx, ty);
-      g.addColorStop(0, 'rgba(255,235,170,' + 0.8 * a + ')'); g.addColorStop(0.45, 'rgba(255,130,30,' + 0.55 * a + ')'); g.addColorStop(1, 'rgba(200,40,10,0)');
-      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(bx - hw, by);
-      ctx.quadraticCurveTo(bx - hw * 0.9 + (tx - bx) * 0.4, (by + ty) / 2, tx, ty);
-      ctx.quadraticCurveTo(bx + hw * 0.9 + (tx - bx) * 0.4, (by + ty) / 2, bx + hw, by); ctx.closePath(); ctx.fill();
-    }
-  }
-  // particles assigned to a place on a ribbon, so the stardust becomes the flame
-  function spiritSlot() {
-    var pick = Math.random() * RWsum, r = 0; while (pick > RW[r] && r < RW.length - 1) { pick -= RW[r]; r++; }
-    return { r: r, i: (Math.random() * (RS[r].length - 1)) | 0, o: (Math.random() * 2 - 1) * 0.9, rise: rnd(0, 1) };
-  }
-  function spiritPos(p, sec) {
-    var q = live[p.f.r][p.f.i], up = ((sec * 0.9 + p.f.rise) % 1);
-    return { x: LX(q.x + q.nx * q.w * p.f.o), y: LY(q.y + q.ny * q.w * p.f.o - up * 7), up: up };
-  }
+    limb(100, 82, 64, 56, 9, 7); limb(64, 56, 34, 22, 7, 5);
+    limb(140, 82, 176, 56, 9, 7); limb(176, 56, 206, 22, 7, 5);
+    limb(112, 186, 108, 258, 12, 8); limb(108, 258, 106, 326, 8, 6);
+    limb(128, 186, 132, 258, 12, 8); limb(132, 258, 134, 326, 8, 6);
+    var d = g.getImageData(0, 0, W, H).data;
+    for (var y = 2; y < H; y += 3) for (var x = 2; x < W; x += 3) if (d[(y * W + x) * 4 + 3] > 128) SIL.push([(x - 120) / 310, (y - 330) / 310]);   // feet at 0, height 1
+  })();
 
   // ---------- particles ----------
-  var N = small ? 1100 : 2100, P = [];
+  var N = small ? 900 : 1700, PER = small ? 34 : 56, P = [], B = [];
   function rnd(a, b) { return a + Math.random() * (b - a); }
-  function nurserySpawn() {   // weighted toward the bright pillars on the right
-    var x = rnd(0.68, 0.97) * IMG_W, y = rnd(0.12, 0.9) * IMG_H;
-    return { x: x, y: y };
-  }
+  function nurserySpawn() { return { x: rnd(0.68, 0.97) * IMG_W, y: rnd(0.12, 0.9) * IMG_H }; }
   function build() {
-    var targets = figurePoints(N);
-    P = targets.map(function (t, i) {
-      var s = Math.random() < 0.82 ? nurserySpawn() : { x: GAL.x + Math.cos(i) * GAL.r * rnd(0.2, 0.9), y: GAL.y + Math.sin(i) * GAL.r * rnd(0.2, 0.9) };
-      var mx = (s.x + t.x) / 2, my = (s.y + t.y) / 2, dx = t.x - s.x, dy = t.y - s.y;
-      var bend = rnd(0.25, 0.6) * (Math.random() < 0.5 ? -1 : 1);
-      var toGal = Math.random() < 0.25;
-      return {
-        s: s, t: t, c: { x: mx - dy * bend, y: my + dx * bend }, f: spiritSlot(),
-        e: toGal ? { x: GAL.x + rnd(-0.5, 0.5) * GAL.r, y: GAL.y + rnd(-0.5, 0.5) * GAL.r }      // some embers return to the galaxy
-                 : { x: rnd(-0.22, 0.22) * IMG_W, y: -rnd(0.25, 0.65) * IMG_H, rel: true },     // the rest rise as embers
-        d: rnd(0, 0.14), size: rnd(0.6, 1.6), spr: hue[(Math.random() * 3) | 0], ph: rnd(0, 6.28)
-      };
+    // stardust → Earths (weighted toward the larger Earths)
+    var wsum = 0; EARTHS.forEach(function (e) { wsum += e.r * e.r; });
+    P = [];
+    for (var i = 0; i < N; i++) {
+      var pick = Math.random() * wsum, ei = 0; while (pick > EARTHS[ei].r * EARTHS[ei].r && ei < EARTHS.length - 1) { pick -= EARTHS[ei].r * EARTHS[ei].r; ei++; }
+      var e = EARTHS[ei], s = Math.random() < 0.8 ? nurserySpawn() : { x: GAL.x + Math.cos(i) * GAL.r * rnd(0.2, 0.9), y: GAL.y + Math.sin(i) * GAL.r * rnd(0.2, 0.9) };
+      var ang = rnd(0, 6.28), rr = Math.sqrt(Math.random()) * e.r, tx = e.x + Math.cos(ang) * rr, ty = e.y + Math.sin(ang) * rr;
+      var bend = rnd(0.2, 0.55) * (Math.random() < 0.5 ? -1 : 1), mx = (s.x + tx) / 2, my = (s.y + ty) / 2;
+      P.push({ s: s, t: { x: tx, y: ty }, c: { x: mx - (ty - s.y) * bend, y: my + (tx - s.x) * bend }, e: e, d: rnd(0, 0.05), size: rnd(0.6, 1.5), spr: hue[(Math.random() * 3) | 0], ph: rnd(0, 6.28) });
+    }
+    // stardust beings standing on each Earth, facing out from it
+    B = [];
+    EARTHS.forEach(function (e, ei) {
+      for (var j = 0; j < e.n; j++) {
+        var ang = -Math.PI / 2 + (e.n === 1 ? 0 : (j - (e.n - 1) / 2) * 0.62), h = Math.max(e.r * 1.1, 0.036 * IMG_H);
+        var being = { e: e, ang: ang, h: h, pop: e.t + 0.1 + j * 0.035 + rnd(0, 0.02), go: rnd(0.55, 0.6), pts: [] };
+        for (var q = 0; q < PER; q++) {
+          var sp = SIL[(Math.random() * SIL.length) | 0];
+          being.pts.push({ u: sp[0] + rnd(-0.01, 0.01), v: sp[1], f: null, bend: rnd(-0.5, 0.5), lag: rnd(0, 0.05), size: rnd(0.7, 1.4), ph: rnd(0, 6.28),
+                           spr: Math.random() < 0.5 ? SPR.white : SPR.gold, rise: { x: rnd(-0.18, 0.18) * IMG_W, y: -rnd(0.2, 0.6) * IMG_H, gal: Math.random() < 0.2 } });
+        }
+        B.push(being);
+      }
     });
+    assignFlameTargets();
   }
-  var ignitions = []; for (var k = 0; k < 9; k++) ignitions.push({ x: rnd(0.7, 0.95) * IMG_W, y: rnd(0.15, 0.8) * IMG_H, at: rnd(0.0, 0.3), s: rnd(0.6, 1.2) });
-  var SMOKE = []; for (var sm = 0; sm < 14; sm++) SMOKE.push({ x: rnd(70, 175), ph: rnd(0, 1), s: rnd(0.7, 1.4), dr: rnd(-1, 1) });
+  function assignFlameTargets() {
+    if (!flamePts || !B.length) return;
+    B.forEach(function (b) { b.pts.forEach(function (p) { p.f = flamePts[(Math.random() * flamePts.length) | 0]; }); });
+  }
+  function beingPos(b, p) {   // a point of a being, standing on its Earth's surface
+    var ca = Math.cos(b.ang + Math.PI / 2), sa = Math.sin(b.ang + Math.PI / 2);
+    var fx = b.e.x + Math.cos(b.ang) * b.e.r * 0.98, fy = b.e.y + Math.sin(b.ang) * b.e.r * 0.98;
+    var lx = p.u * b.h, ly = p.v * b.h;
+    return { x: fx + lx * ca - ly * sa, y: fy + lx * sa + ly * ca, hx: fx + Math.cos(b.ang) * b.h * 0.9, hy: fy + Math.sin(b.ang) * b.h * 0.9 };
+  }
+  var ignitions = []; for (var k = 0; k < 9; k++) ignitions.push({ x: rnd(0.7, 0.95) * IMG_W, y: rnd(0.15, 0.8) * IMG_H, at: rnd(0.0, 0.2), s: rnd(0.6, 1.2) });
 
   // ---------- easing ----------
   function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
@@ -216,130 +161,145 @@
   function resize() {
     var r = canvas.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = r.width; H = r.height; canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    sc = Math.max(W / IMG_W, H / IMG_H);                // cover
-    // keep the figure centred; on narrow screens shift so galaxy edge and nursery edge both show
-    ox = W / 2 - FIG.x * sc; oy = H / 2 - FIG.y * sc - (W / H < 1.6 ? H * 0.06 : -H * 0.01);
+    sc = Math.max(W / IMG_W, H / IMG_H);
+    ox = W / 2 - FIG.x * sc; oy = H / 2 - FIG.y * sc;
   }
   function X(x) { return ox + x * sc; } function Y(y) { return oy + y * sc; }
 
+  // the flame woman, drawn from the photograph: each frame the photo is re-laid in seamless
+  // one-pixel-exact horizontal slices on an offscreen canvas, so she sways and dances
+  var warp = document.createElement('canvas'), wctx = warp.getContext('2d'), PAD = 40;
+  warp.width = FW + PAD * 2; warp.height = FH;
+  function drawFlameWoman(alpha, sec, energy) {
+    if (!flameImg.naturalWidth || alpha <= 0) return;
+    wctx.clearRect(0, 0, warp.width, warp.height);
+    var S = 68, sh = FH / S;
+    for (var i = 0; i < S; i++) {
+      var y0 = Math.round(i * sh), y1 = Math.round((i + 1) * sh), hgt = 1 - i / S;
+      var off = (Math.sin(sec * 3.2 + i * 0.16) + 0.5 * Math.sin(sec * 5.1 + i * 0.37)) * 7 * energy * (0.3 + hgt);
+      wctx.drawImage(flameImg, 0, y0, FW, y1 - y0, PAD + off, y0, FW, y1 - y0);
+    }
+    var r = flameRect(), dw = r.w * sc * (FW + PAD * 2) / FW, dh = r.h * sc, lean = Math.sin(sec * 1.3) * 0.03 * energy;
+    ctx.save(); ctx.translate(X(FIG.x), Y(r.y) + dh); ctx.rotate(lean);
+    var flick = 1 + 0.02 * Math.sin(sec * 7) * energy;
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = alpha * 0.6;
+    ctx.drawImage(warp, -dw / 2, -dh * flick, dw, dh * flick);
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = alpha * (0.62 + 0.1 * Math.sin(sec * 9));
+    ctx.drawImage(warp, -dw / 2, -dh * flick, dw, dh * flick);
+    ctx.restore();
+  }
+
   // ---------- frame ----------
-  // timeline (fraction of the 10 s loop):
-  //   0.00–0.46 stardust travels · 0.40–0.60 the human form holds · 0.50–0.62 consciousness sparks
-  //   0.58–0.70 the form catches fire · 0.68–0.86 the fire spirit dances · 0.84–0.99 embers return to the cosmos
+  // timeline (fraction of the 14 s loop):
+  //   0.00–0.42 stardust forms Earth, then another, then Earths everywhere
+  //   0.22–0.55 stardust beings pop up on every Earth · 0.55–0.70 they all stream to the flame woman
+  //   0.62–0.88 the flame woman dances · 0.86–0.99 embers return to the cosmos
   var t0 = performance.now(), last = -1;
   function draw(now, frozenT) {
     var ms = frozenT != null ? frozenT * LOOP : (now - t0) % LOOP, t = ms / LOOP, sec = now / 1000;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
     ctx.fillStyle = '#080c14'; ctx.fillRect(0, 0, W, H);
     if (bg.complete && bg.naturalWidth) {
       ctx.drawImage(bg, ox, oy, IMG_W * sc, IMG_H * sc);
-      if (galLayer) {   // the galaxy keeps turning, slowly, across cycles
+      if (galLayer) {
         var rot = -((now - t0) / 1000) * 0.012;
         ctx.save(); ctx.translate(X(GAL.x), Y(GAL.y)); ctx.rotate(frozenT != null ? 0 : rot);
         var gr = GAL.r * sc; ctx.drawImage(galLayer, -gr, -gr, gr * 2, gr * 2); ctx.restore();
       }
     }
-    // gentle vignette toward centre stage
     var v = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.2, W / 2, H / 2, Math.max(W, H) * 0.75);
     v.addColorStop(0, 'rgba(8,12,20,0)'); v.addColorStop(1, 'rgba(8,12,20,.55)');
     ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
 
-    var cx = X(FIG.x), cy = Y(FIG.y), base = Math.max(1, sc * 4.6);
-    var catchFire = ease((t - 0.58) / 0.12);                      // human → flame
-    var spirit = band(t, 0.62, 0.7, 0.84, 0.95);                  // ribbon visibility
-    var release = clamp((t - 0.84) / 0.13);
-    var energy = 0.35 + 0.65 * ease((t - 0.62) / 0.1);
-    animateSpirit(sec, energy);
+    var flameA = band(t, 0.58, 0.7, 0.86, 0.97), energy = 0.4 + 0.6 * ease((t - 0.62) / 0.1);
 
-    // smoke drifts up behind the spirit (normal blending, very faint)
-    var smokeA = band(t, 0.62, 0.72, 0.9, 1);
-    if (smokeA > 0) {
-      for (var m = 0; m < SMOKE.length; m++) {
-        var sk = SMOKE[m], u = (sec * 0.12 + sk.ph) % 1, sr = (40 + 90 * u) * sk.s / 340 * FIG.h * sc;
-        ctx.globalAlpha = smokeA * Math.sin(u * Math.PI) * 0.55;
-        ctx.drawImage(SPR.smoke, X(LX(sk.x + sk.dr * 60 * u + Math.sin(sec + sk.ph * 6) * 10)) - sr, Y(LY(300 - 380 * u)) - sr, sr * 2, sr * 2);
-      }
-    }
-
-    ctx.globalCompositeOperation = 'lighter';
     // 1. stars ignite in the nursery
+    ctx.globalCompositeOperation = 'lighter';
     ignitions.forEach(function (g) {
-      var a = band(t, g.at, g.at + 0.03, g.at + 0.06, g.at + 0.22) + 0.15 * band(t, 0, 0.05, 0.9, 1);
+      var a = band(t, g.at, g.at + 0.03, g.at + 0.06, g.at + 0.2) + 0.15 * band(t, 0, 0.05, 0.9, 1);
       if (a <= 0) return; var r = (18 + 30 * g.s) * sc * 2.2 * (0.7 + 0.3 * a);
       ctx.globalAlpha = a * 0.75; ctx.drawImage(SPR.white, X(g.x) - r / 2, Y(g.y) - r / 2, r, r);
     });
 
-    // 2. the human form's soft body glow, warming toward fire
-    var body = band(t, 0.4, 0.56, 0.62, 0.7);
-    if (body > 0 && figGlow) {
-      ctx.globalAlpha = body * (0.32 + 0.12 * Math.sin(now / 300));
-      var gw = figGlow.w * sc, gh = figGlow.h * sc; ctx.drawImage(figGlow.c, cx - gw / 2, cy - gh / 2, gw, gh);
-    }
-    // 3. the fire spirit: heat glow, fire bed and flame ribbons
-    if (spirit > 0) {
-      var hr = FIG.h * sc * (1.05 + 0.06 * Math.sin(sec * 6));
-      ctx.globalAlpha = spirit * 0.55; ctx.drawImage(SPR.fglow, cx - hr / 2, Y(LY(150)) - hr / 2, hr, hr);
-      ctx.globalAlpha = spirit * 0.7; var hb = FIG.h * sc * 0.75; ctx.drawImage(SPR.fglow, cx - hb / 2, Y(LY(335)) - hb / 2, hb, hb);
-      drawFireBed(sec, spirit);
-      ctx.globalAlpha = spirit;
-      for (var pass = 0; pass < FLAMES.length; pass++) for (var rb = 0; rb < live.length; rb++) drawRibbon(live[rb], WIDEN[pass], FLAMES[pass][2]);
-      var hd = live[2][live[2].length - 1], hs = FIG.h * sc * 0.11;            // the lifted head, glowing brightest
-      ctx.globalAlpha = spirit * 0.85; ctx.drawImage(SPR.fglow, X(LX(hd.x + 2)) - hs, Y(LY(hd.y + 4)) - hs, hs * 2, hs * 2);
-    }
-
-    // 4. stardust → human form → flame → embers
-    for (var i = 0; i < P.length; i++) {
-      var p = P[i], x, y, a, s = p.size * base, spr = p.spr;
-      var a0 = 0.04 + p.d, a1 = 0.46 + p.d * 0.6;                 // travel window
-      if (t < a1) {
-        var u2 = ease((t - a0) / (a1 - a0)), iu = 1 - u2;
-        x = iu * iu * p.s.x + 2 * iu * u2 * p.c.x + u2 * u2 * p.t.x;
-        y = iu * iu * p.s.y + 2 * iu * u2 * p.c.y + u2 * u2 * p.t.y;
-        a = clamp((t - a0) / 0.06) * (0.55 + 0.45 * u2);
-        s *= 0.8 + 0.4 * (1 - u2);
-      } else if (t < 0.84) {
-        var w = Math.sin(now / 420 + p.ph) * 0.0025 * IMG_H;
-        var hx = p.t.x + w, hy = p.t.y + Math.cos(now / 500 + p.ph) * 0.0025 * IMG_H;
-        var warm = ease((t - 0.52) / 0.08);
-        if (catchFire <= 0) { x = hx; y = hy; a = 0.9; spr = warm > 0.5 ? SPR.gold : p.spr; s *= 1 + warm * 0.25; }
-        else {                                                     // the body catches fire, the dust flows into the flame
-          var fp = spiritPos(p, sec), cf = ease((catchFire - p.d * 2) / (1 - 0.28));
-          x = hx + (fp.x - hx) * cf; y = hy + (fp.y - hy) * cf;
-          spr = cf < 0.35 ? SPR.gold : (p.ph > 4.4 ? SPR.white : p.ph > 1.6 ? SPR.flame : SPR.ember);
-          a = 0.9 - cf * 0.35 * fp.up; s *= 1.25 - cf * 0.35 * fp.up;
-        }
-      } else {                                                     // the spirit scatters as embers
-        var fp2 = spiritPos(p, sec), b = easeOut((release - p.d * 1.5) / (1 - 0.21));
-        var ex = p.e.rel ? fp2.x + p.e.x : p.e.x, ey = p.e.rel ? fp2.y + p.e.y : p.e.y;
-        x = fp2.x + (ex - fp2.x) * b + Math.sin(sec * 3 + p.ph) * 6 * b; y = fp2.y + (ey - fp2.y) * b;
-        a = (1 - clamp((t - 0.86) / (0.13 - p.d * 0.3))) * 0.95; spr = b < 0.3 ? SPR.flame : SPR.ember;
-        s *= 1.1 - 0.5 * b;
+    // 2. the Earths emerge — glow, flash, then the planet itself
+    EARTHS.forEach(function (e) {
+      var behind = Math.abs(e.x - FIG.x) < 0.13 * IMG_W ? 0.85 : 0.4, a = band(t, e.t - 0.02, e.t + 0.05, 0.84, 0.96) * (1 - behind * flameA);
+      if (a <= 0) return;
+      var grow = 0.55 + 0.45 * easeOut((t - e.t + 0.02) / 0.08), r = e.r * sc * grow;
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = a * 0.55; var ar = r * 2.6; ctx.drawImage(SPR.teal, X(e.x) - ar, Y(e.y) - ar, ar * 2, ar * 2);
+      var fl = band(t, e.t - 0.02, e.t, e.t + 0.01, e.t + 0.06);
+      if (fl > 0) { ctx.globalAlpha = fl; var fr = r * 3; ctx.drawImage(SPR.white, X(e.x) - fr, Y(e.y) - fr, fr * 2, fr * 2); }
+      if (earthImg.naturalWidth) {
+        ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a;
+        ctx.save(); ctx.translate(X(e.x), Y(e.y)); ctx.rotate(e.rot + sec * 0.03); ctx.drawImage(earthImg, -r, -r, r * 2, r * 2); ctx.restore();
       }
-      if (a <= 0.01) continue;
+    });
+
+    // 3. stardust flows in and becomes each Earth
+    ctx.globalCompositeOperation = 'lighter';
+    var base = Math.max(1, sc * 4.6);
+    for (var i = 0; i < P.length; i++) {
+      var p = P[i], a0 = Math.max(0.01, p.e.t - 0.13) + p.d, a1 = p.e.t + p.d * 0.4;
+      if (t < a0 || t > a1 + 0.05) continue;
+      var u = ease((t - a0) / (a1 - a0)), iu = 1 - u, s = p.size * base * (0.8 + 0.4 * iu);
+      var x = iu * iu * p.s.x + 2 * iu * u * p.c.x + u * u * p.t.x, y = iu * iu * p.s.y + 2 * iu * u * p.c.y + u * u * p.t.y;
+      var a = clamp((t - a0) / 0.03) * (t > a1 ? 1 - (t - a1) / 0.05 : 1);
       ctx.globalAlpha = a * (0.75 + 0.25 * Math.sin(now / 160 + p.ph));
-      ctx.drawImage(spr, X(x) - s, Y(y) - s, s * 2, s * 2);
+      ctx.drawImage(p.spr, X(x) - s, Y(y) - s, s * 2, s * 2);
     }
 
-    // consciousness: a spark at the mind, a halo, then the flash that lights the fire
-    var headY = Y(FIG.y - FIG.h * 0.38);
-    var spark = band(t, 0.5, 0.56, 0.62, 0.68);
-    if (spark > 0) {
-      var sr2 = FIG.h * sc * (0.18 + 0.1 * spark + 0.03 * Math.sin(now / 120));
-      ctx.globalAlpha = spark; ctx.drawImage(SPR.glow, cx - sr2 / 2, headY - sr2 / 2, sr2, sr2);
-      var ring = clamp((t - 0.53) / 0.14);
-      ctx.globalAlpha = spark * (1 - ring) * 0.8; ctx.strokeStyle = 'rgba(255,228,170,1)'; ctx.lineWidth = Math.max(1, sc * 3);
-      ctx.beginPath(); ctx.arc(cx, headY, FIG.h * sc * (0.06 + ring * 0.32), 0, 6.2832); ctx.stroke();
+    // 4. the flame woman (the photograph) rises as the beings arrive
+    if (flameA > 0) {
+      var hr = FIG.h * sc * (0.95 + 0.05 * Math.sin(sec * 6));
+      ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = flameA * 0.4;
+      ctx.drawImage(SPR.fglow, X(FIG.x) - hr / 2, Y(FIG.y) - hr / 2, hr, hr);
+      drawFlameWoman(flameA, sec, energy);
     }
-    var flash = band(t, 0.6, 0.64, 0.65, 0.74);
-    if (flash > 0) {
-      var br = FIG.h * sc * (0.7 + 0.9 * ease((t - 0.6) / 0.12));
-      ctx.globalAlpha = flash * 0.75; ctx.drawImage(SPR.fglow, cx - br / 2, cy - br / 2, br, br);
+
+    // 5. stardust beings: pop up on every Earth, then all stream into the flame woman
+    ctx.globalCompositeOperation = 'lighter';
+    var fr = flameRect(), bsz = Math.max(0.8, sc * 3.2);
+    for (var bi = 0; bi < B.length; bi++) {
+      var b = B[bi], pop = clamp((t - b.pop) / 0.03);
+      if (pop <= 0) continue;
+      var bounce = pop < 1 ? 0.6 + 0.6 * Math.sin(pop * Math.PI * 0.85) : 1;
+      for (var q = 0; q < b.pts.length; q++) {
+        var bp = b.pts[q], pos = beingPos(b, bp), bx, by, ba, bs = bp.size * bsz, spr = bp.spr;
+        var sx = b.e.x + (pos.x - b.e.x) * bounce, sy = b.e.y + (pos.y - b.e.y) * bounce;
+        var go0 = b.go + bp.lag, go1 = go0 + 0.1;
+        var tgx = bp.f ? fr.x + bp.f[0] * fr.w : FIG.x, tgy = bp.f ? fr.y + bp.f[1] * fr.h : FIG.y;
+        tgx += Math.sin(sec * 3 + bp.ph) * 0.004 * IMG_H; tgy += Math.cos(sec * 2.6 + bp.ph) * 0.004 * IMG_H - ((sec * 0.6 + bp.ph) % 1) * 0.01 * IMG_H;
+        if (t < go0) {                                    // standing on the Earth, shimmering
+          bx = sx + Math.sin(now / 420 + bp.ph) * 0.0012 * IMG_H; by = sy + Math.cos(now / 500 + bp.ph) * 0.0012 * IMG_H; ba = pop * 0.95;
+        } else if (t < go1) {                             // rising and streaming to the flame woman
+          var g2 = ease((t - go0) / (go1 - go0)), ig = 1 - g2;
+          var cxp = (sx + tgx) / 2 - (tgy - sy) * bp.bend * 0.6, cyp = (sy + tgy) / 2 + (tgx - sx) * bp.bend * 0.6 - 0.12 * IMG_H;
+          bx = ig * ig * sx + 2 * ig * g2 * cxp + g2 * g2 * tgx; by = ig * ig * sy + 2 * ig * g2 * cyp + g2 * g2 * tgy;
+          ba = 0.95; bs *= 1 + 0.4 * Math.sin(g2 * Math.PI); spr = g2 > 0.7 ? SPR.flame : spr;
+        } else if (t < 0.86) {                            // part of the flame now
+          bx = tgx; by = tgy; ba = 0.75 * (1 - 0.4 * flameA) + 0.2; spr = bp.ph > 3.5 ? SPR.flame : SPR.ember;
+        } else {                                          // embers return to the cosmos
+          var rb = easeOut((t - 0.86) / (0.12 - bp.lag)), ex = bp.rise.gal ? GAL.x : tgx + bp.rise.x, ey = bp.rise.gal ? GAL.y : tgy + bp.rise.y;
+          bx = tgx + (ex - tgx) * rb + Math.sin(sec * 3 + bp.ph) * 6 * rb; by = tgy + (ey - tgy) * rb;
+          ba = (1 - clamp((t - 0.88) / 0.1)) * 0.9; spr = rb < 0.3 ? SPR.flame : SPR.ember; bs *= 1.1 - 0.5 * rb;
+        }
+        if (ba <= 0.01) continue;
+        ctx.globalAlpha = ba * (0.75 + 0.25 * Math.sin(now / 160 + bp.ph));
+        ctx.drawImage(spr, X(bx) - bs, Y(by) - bs, bs * 2, bs * 2);
+      }
+      // consciousness: a spark at each being's head as it appears
+      var sp = band(t, b.pop + 0.01, b.pop + 0.03, b.pop + 0.05, b.pop + 0.12);
+      if (sp > 0) { var hp = beingPos(b, { u: 0, v: -0.9 }), sr = b.h * sc * 0.9; ctx.globalAlpha = sp * 0.9; ctx.drawImage(SPR.glow, X(hp.x) - sr / 2, Y(hp.y) - sr / 2, sr, sr); }
     }
+    // the flash as the last beings arrive
+    var flash = band(t, 0.64, 0.67, 0.68, 0.76);
+    if (flash > 0) { var br = FIG.h * sc * (0.6 + 0.6 * ease((t - 0.64) / 0.1)); ctx.globalAlpha = flash * 0.6; ctx.drawImage(SPR.fglow, X(FIG.x) - br / 2, Y(FIG.y) - br / 2, br, br); }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
 
     // captions
-    var phase = t < 0.3 ? 0 : t < 0.62 ? 1 : 2;
+    var phase = t < 0.24 ? 0 : t < 0.58 ? 1 : 2;
     if (phase !== last) { caps.forEach(function (c, j) { c.classList.toggle('is-on', j === phase); }); last = phase; }
   }
 
@@ -349,14 +309,14 @@
   function stop() { running = false; cancelAnimationFrame(raf); }
   function init() {
     var rr = root.getBoundingClientRect();
-    if (rr.width / Math.max(1, rr.height) < 1.6) { FIG.h = 0.5 * IMG_H; }
     if (bg.naturalWidth) buildGalaxyLayer();
-    build(); resize();
-    if (reduce) { draw(performance.now(), 0.78); caps.forEach(function (c) { c.classList.add('is-on'); }); root.classList.add('is-still'); return; }
+    build(); resize(); if (flameImg.naturalWidth) sampleFlame();
+    if (reduce) { draw(performance.now(), 0.76); caps.forEach(function (c) { c.classList.add('is-on'); }); root.classList.add('is-still'); return; }
     start();
   }
-  bg.onload = function () { buildGalaxyLayer(); if (reduce) draw(performance.now(), 0.78); };
-  window.addEventListener('resize', function () { resize(); if (reduce) draw(performance.now(), 0.78); });
+  flameImg.onload = function () { sampleFlame(); };
+  bg.onload = function () { buildGalaxyLayer(); if (reduce) draw(performance.now(), 0.76); };
+  window.addEventListener('resize', function () { resize(); if (reduce) draw(performance.now(), 0.76); });
   document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
   if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; visible ? start() : stop(); }).observe(root);
   // test hook: render a specific moment (0–1) of the cycle
