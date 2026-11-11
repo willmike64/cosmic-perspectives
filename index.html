@@ -207,6 +207,17 @@
       pointer-events: none;
     }
 
+
+    /* ── Emergence animation (hero) ── */
+    .emergence{position:relative;margin:0 0 clamp(1.4rem,3vw,2.2rem);width:100%;aspect-ratio:2/1;max-height:520px;border-radius:16px;overflow:hidden;background:#080c14;border:1px solid rgba(212,170,90,.22);box-shadow:0 30px 80px -40px rgba(212,170,90,.35),0 0 0 1px rgba(255,255,255,.02) inset}
+    .emergence canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+    .emergence__caps{position:absolute;left:0;right:0;bottom:0;padding:clamp(.8rem,2.4vw,1.4rem) clamp(1rem,3vw,1.8rem);background:linear-gradient(180deg,rgba(8,12,20,0),rgba(8,12,20,.78));min-height:4.2em;display:grid;align-items:end}
+    .emergence__caps span{grid-area:1/1;font-family:var(--font-display);font-size:clamp(1.05rem,2.4vw,1.6rem);line-height:1.25;color:#f3ead6;text-align:center;opacity:0;transform:translateY(6px);transition:opacity .45s ease,transform .45s ease;text-shadow:0 2px 18px rgba(0,0,0,.8)}
+    .emergence__caps span em{color:var(--color-accent);font-style:italic}
+    .emergence__caps span.is-on{opacity:1;transform:none;transition:opacity .9s ease .5s,transform .9s ease .5s}
+    .emergence.is-still .emergence__caps{display:flex;flex-direction:column;gap:.15rem}
+    .emergence.is-still .emergence__caps span{grid-area:auto;font-size:clamp(.95rem,2vw,1.25rem)}
+    @media (max-width:640px){.emergence{aspect-ratio:4/3;border-radius:12px}}
     .hero__content {
       position: relative;
       z-index: 2;
@@ -1526,6 +1537,14 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
 <section class="hero" id="top">
   <div class="container container--wide">
     <div class="hero__content">
+      <figure class="emergence" data-emergence data-src="cosmos-emergence.webp" data-src-sm="cosmos-emergence-sm.webp" aria-label="Animation: stardust from a stellar nursery beside a spiral galaxy gathers into a human form, consciousness ignites, and the form becomes light. It repeats every 10 seconds.">
+        <canvas aria-hidden="true"></canvas>
+        <figcaption class="emergence__caps">
+          <span data-cap>From the stardust of a stellar nursery…</span>
+          <span data-cap>…consciousness emerges.</span>
+          <span data-cap>For what purpose? <em>To emerge as gods, as part of the light.</em></span>
+        </figcaption>
+      </figure>
       <p class="hero__eyebrow">The Research Behind Elyria</p>
       <h1 class="hero__title">Cosmic Perspectives:<br><em>Galaxies, Consciousness &amp; Spirituality</em></h1>
       <p class="hero__subtitle">A research reference on galaxy counts, JWST discoveries, fine-tuning, consciousness, divinity, indigenous star traditions, Elyrian doctrine, the epigenetic science of oxygen and breath, and the brain as a complex system.</p>
@@ -1974,5 +1993,6 @@ a.is-locked::after{content:" ✦";color:var(--color-accent);font-size:.7em}
  }
 })();
 </script>
+<script src="emergence.js" defer></script>
 </body>
 </html>
