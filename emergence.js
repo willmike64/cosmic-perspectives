@@ -55,8 +55,8 @@
   var hue = [SPR.teal, SPR.rose, SPR.gold, SPR.white];
 
   // ---------- photographs: Earth (NASA, Apollo 17) and the flame woman (the artist's photo) ----------
-  var earthImg = new Image(); earthImg.src = root.getAttribute('data-earth') || 'earth.webp';
-  var flameImg = new Image(); flameImg.src = root.getAttribute('data-flame') || 'flame-woman.webp';
+  var earthImg = new Image(); earthImg.crossOrigin = 'anonymous'; earthImg.src = root.getAttribute('data-earth') || 'earth.webp';
+  var flameImg = new Image(); flameImg.crossOrigin = 'anonymous'; flameImg.src = root.getAttribute('data-flame') || 'flame-woman.webp';
   var FW = 450, FH = 884;                                   // flame-woman image size
   function flameRect() { var h = FIG.h, w = h * FW / FH; return { x: FIG.x - w / 2, y: FIG.y - h / 2, w: w, h: h }; }
   var flamePts = null;                                      // bright points of the flame, for the beings to fly to
@@ -64,8 +64,12 @@
     if (!flameImg.naturalWidth) return;
     var w = 150, h = Math.round(150 * FH / FW), c = document.createElement('canvas'); c.width = w; c.height = h;
     var g = c.getContext('2d'); g.drawImage(flameImg, 0, 0, w, h);
-    var d = g.getImageData(0, 0, w, h).data, pts = [];
-    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) { var k = (y * w + x) * 4; if (d[k + 3] > 150 && d[k] > 200) pts.push([x / w, y / h]); }
+    var pts = [];
+    try {
+      var d = g.getImageData(0, 0, w, h).data;
+      for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) { var k = (y * w + x) * 4; if (d[k + 3] > 150 && d[k] > 200) pts.push([x / w, y / h]); }
+    } catch (err) { pts = []; }
+    if (!pts.length) for (var f = 0; f < 600; f++) { var v = Math.random(); pts.push([0.5 + (Math.random() - 0.5) * 0.4 * (0.4 + v), 0.12 + v * 0.8]); }   // fallback: a flame-shaped column
     flamePts = pts; assignFlameTargets();
   }
 
