@@ -1,7 +1,7 @@
 /* Cosmic Perspectives — "Emergence" hero animation
    A 14-second repeating cycle: a stellar nursery beside a spiral galaxy releases stardust;
    the dust forms an Earth, then another, then Earths as many as the stars. Stardust beings
-   rise from countless Earths; the few who find the light gather into gods of flame, each
+   bloom like lotuses of light on countless Earths; the few who find the light gather into gods of flame, each
    one the artist's own photograph, "Dancing Fire Spirit". Many gods, though far fewer than
    the Earths. They dance, then return to the cosmos as embers.
    Pure canvas; no dependencies. Respects prefers-reduced-motion. */
@@ -141,8 +141,8 @@
   }
   var EK = 1.25;                                             // sprite size relative to the planet's diameter (room for the atmosphere)
 
-  // ---------- stardust beings: wisps of living light that rise and curl off each Earth ----------
-  // (no drawn figure; each being is a bright core trailing a ribbon of stardust)
+  // ---------- stardust beings: lotus blossoms of living light that open above each Earth ----------
+  // (each being is a bright seed with six unfolding petals and a faint halo; no tails, no trails)
   // ---------- particles ----------
   var N = small ? 700 : 1300, PER = small ? 30 : 48, P = [], B = [], SP = [];
   function rnd(a, b) { return a + Math.random() * (b - a); }
@@ -165,11 +165,15 @@
       for (var j = 0; j < nb; j++) {
         var ang = -Math.PI / 2 + rnd(-1.25, 1.25), L = Math.max(e.r * 1.5, 0.05 * IMG_H);
         var being = { e: e, ang: ang, L: L, curl: rnd(0.5, 1.1) * (Math.random() < 0.5 ? -1 : 1), pop: e.t + 0.08 + j * 0.045 + rnd(0, 0.03), go: rnd(0.55, 0.6),
-                      god: nearestGod(e.x, e.y - e.r), ph: rnd(0, 6.28), pts: [] };
+                      god: nearestGod(e.x, e.y - e.r), ph: rnd(0, 6.28), rot0: rnd(0, 6.28), R: Math.max(e.r * 0.85, 0.03 * IMG_H), pts: [] };
         for (var q = 0; q < PER; q++) {
-          var k = Math.pow(q / (PER - 1), 1.3);                 // 0 = bright head, 1 = faint end of the tail at the surface
-          being.pts.push({ k: k, j: rnd(-1, 1), f: null, bend: rnd(-0.35, 0.35), lag: k * 0.05, size: (1.05 - k * 0.6) * rnd(0.8, 1.15), ph: rnd(0, 6.28),
-                           spr: k < 0.08 ? SPR.white : Math.random() < 0.75 ? SPR.gold : SPR.white, rise: { x: rnd(-0.18, 0.18) * IMG_W, y: -rnd(0.2, 0.6) * IMG_H, gal: Math.random() < 0.2 } });
+          // part: 0 = the bright seed at the heart, 1 = a petal, 2 = the halo ring
+          var part = q < 4 ? 0 : q < PER - 8 ? 1 : 2, sgn = Math.random() < 0.5 ? -1 : 1;
+          being.pts.push({ part: part, petal: q % 6, s: part === 1 ? Math.pow(Math.random(), 0.8) : 0, w: sgn * rnd(0.55, 1), ra: rnd(0, 6.28),
+                           j: rnd(-1, 1), f: null, bend: rnd(-0.35, 0.35), lag: rnd(0, 0.05), ph: rnd(0, 6.28),
+                           size: part === 0 ? rnd(1.1, 1.4) : part === 2 ? rnd(0.45, 0.65) : rnd(0.6, 0.95),
+                           spr: part === 0 ? SPR.white : part === 2 ? SPR.white : Math.random() < 0.7 ? SPR.gold : SPR.rose,
+                           rise: { x: rnd(-0.18, 0.18) * IMG_W, y: -rnd(0.2, 0.6) * IMG_H, gal: Math.random() < 0.2 } });
         }
         B.push(being);
       }
@@ -192,14 +196,44 @@
     SP.forEach(function (p) { p.f = pick(); });
   }
   function godPoint(gi, f, flip) { var r = flameRect(GODS[gi]), u = flip ? 1 - f[0] : f[0]; return { x: r.x + u * r.w, y: r.y + f[1] * r.h }; }
-  // a point along a wisp: it leaves the surface along the normal, then bends upward and curls
+  // the heart of a blossom: it lifts gently off the day side of its Earth and bobs there
+  function bloomCenter(b, grow, sec) {
+    var nx = Math.cos(b.ang), ny = Math.sin(b.ang), lift = b.e.r * (1.05 + 0.6 * grow) + b.R * 0.9 * grow;
+    return { x: b.e.x + nx * lift + Math.sin(sec * 1.1 + b.ph) * b.R * 0.06, y: b.e.y + ny * lift - b.R * 0.25 * grow + Math.cos(sec * 1.4 + b.ph) * b.R * 0.08 };
+  }
+  // a point of a blossom: six petals unfold and slowly turn; a faint halo ring breathes around them
   function beingPos(b, p, grow, sec) {
-    var ox0 = Math.cos(b.ang), oy0 = Math.sin(b.ang), dh = b.e.r * 0.3 + b.L * 2.2 * grow, d = Math.max(0, dh - b.L * 0.3 * p.k * (0.4 + grow));
-    var bx0 = b.e.x + ox0 * b.e.r * 0.99, by0 = b.e.y + oy0 * b.e.r * 0.99;
-    var u = Math.min(d / b.L, 2.2), dirx = ox0 * (1 - u * 0.3), diry = oy0 * (1 - u * 0.3) - u * 0.6, n = Math.hypot(dirx, diry) || 1;
-    var px = -oy0, py = ox0, sw = Math.sin(sec * 2.2 + b.ph + u * 3.2) * b.L * 0.07 * u + b.curl * b.L * 0.12 * u * u;
-    var spread = p.j * b.L * 0.022 * (0.4 + p.k * 1.2);
-    return { x: bx0 + dirx / n * d + px * (sw + spread), y: by0 + diry / n * d + py * (sw + spread) };
+    var c = bloomCenter(b, grow, sec), open = easeOut(grow), turn = b.rot0 + sec * 0.22 * (b.curl > 0 ? 1 : -1);
+    if (p.part === 0) return { x: c.x + p.j * b.R * 0.04, y: c.y + Math.sin(sec * 3 + p.ph) * b.R * 0.04 };
+    if (p.part === 2) { var hr = b.R * (0.95 + 0.06 * Math.sin(sec * 2 + b.ph)) * open, ha = p.ra + turn * 0.5; return { x: c.x + Math.cos(ha) * hr, y: c.y + Math.sin(ha) * hr }; }
+    var th = turn + p.petal * Math.PI / 3 + p.w * 0.36 * Math.sin(Math.PI * p.s), r = p.s * b.R * 0.82 * open * (0.97 + 0.03 * Math.sin(sec * 2.4 + p.petal));
+    return { x: c.x + Math.cos(th) * r, y: c.y + Math.sin(th) * r };
+  }
+  // the blossom itself: six petals of gold light, a white-hot seed and a thin breathing halo
+  function drawBloom(b, alpha, grow, sec) {
+    if (alpha <= 0.01) return;
+    var c = bloomCenter(b, grow, sec), cx = X(c.x), cy = Y(c.y), open = easeOut(grow), R = b.R * sc * open;
+    if (R < 1.5) return;
+    var turn = b.rot0 + sec * 0.22 * (b.curl > 0 ? 1 : -1), breathe = 1 + 0.05 * Math.sin(sec * 2.4 + b.ph);
+    ctx.save(); ctx.translate(cx, cy); ctx.globalCompositeOperation = 'lighter';
+    var pg = ctx.createRadialGradient(0, 0, 0, 0, 0, R);
+    pg.addColorStop(0, 'rgba(255,246,220,.95)'); pg.addColorStop(0.35, 'rgba(250,205,120,.6)'); pg.addColorStop(0.8, 'rgba(235,150,90,.22)'); pg.addColorStop(1, 'rgba(220,110,140,0)');
+    for (var layer = 0; layer < 2; layer++) {                   // an outer ring of six petals, and an inner ring turned between them
+      var Lr = R * (layer ? 0.62 : 1) * breathe, off = layer ? Math.PI / 6 : 0, wd = layer ? 0.75 : 0.62;
+      ctx.globalAlpha = alpha * (layer ? 0.75 : 0.55);
+      ctx.fillStyle = pg;
+      for (var k = 0; k < 6; k++) {
+        var th = turn * (layer ? -0.6 : 1) + off + k * Math.PI / 3, ca = Math.cos(th), sa = Math.sin(th);
+        var lx = Math.cos(th - wd) * Lr * 0.8, ly = Math.sin(th - wd) * Lr * 0.8, rx = Math.cos(th + wd) * Lr * 0.8, ry = Math.sin(th + wd) * Lr * 0.8;
+        ctx.beginPath(); ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(lx, ly, ca * Lr, sa * Lr);
+        ctx.quadraticCurveTo(rx, ry, 0, 0); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = alpha * 0.35; ctx.strokeStyle = 'rgba(255,236,190,1)'; ctx.lineWidth = Math.max(0.6, R * 0.04);
+    ctx.beginPath(); ctx.arc(0, 0, R * 1.18 * breathe, 0, 6.2832); ctx.stroke();
+    ctx.globalAlpha = alpha; var cr = Math.max(2, R * 0.42); ctx.drawImage(SPR.white, -cr, -cr, cr * 2, cr * 2);
+    ctx.restore();
   }
   var ignitions = []; for (var k = 0; k < 9; k++) ignitions.push({ x: rnd(0.7, 0.95) * IMG_W, y: rnd(0.15, 0.8) * IMG_H, at: rnd(0.0, 0.2), s: rnd(0.6, 1.2) });
 
@@ -373,7 +407,7 @@
         var go0 = b.go + bp.lag, go1 = go0 + 0.1;
         var tp = bp.f ? godPoint(b.god, bp.f, gd.flip) : { x: gd.x, y: gd.y };
         var tgx = tp.x + Math.sin(sec * 3 + bp.ph) * 0.004 * gd.h, tgy = tp.y + Math.cos(sec * 2.6 + bp.ph) * 0.004 * gd.h - ((sec * 0.6 + bp.ph) % 1) * 0.012 * gd.h;
-        if (t < go0) { bx = sx2; by = sy2; ba = pop * (0.6 - bp.k * 0.5) * clamp(grow * 4); }
+        if (t < go0) { bx = sx2; by = sy2; ba = pop * (bp.part === 0 ? 0.9 : bp.part === 2 ? 0.3 : 0.32 - bp.s * 0.12) * clamp(grow * 4); }
         else if (t < go1) {
           var g2 = ease((t - go0) / (go1 - go0)), ig = 1 - g2;
           var cxp = (sx2 + tgx) / 2 - (tgy - sy2) * bp.bend * 0.6, cyp = (sy2 + tgy) / 2 + (tgx - sx2) * bp.bend * 0.6 - 0.1 * IMG_H;
@@ -389,8 +423,9 @@
         ctx.globalAlpha = ba * (0.75 + 0.25 * Math.sin(now / 160 + bp.ph));
         ctx.drawImage(spr, X(bx) - bs, Y(by) - bs, bs * 2, bs * 2);
       }
-      if (t < b.go) {                                          // the soft glow of each wisp's head
-        var hp = beingPos(b, { k: 0, j: 0 }, grow, sec), sr = b.e.r * sc * (0.9 + 0.15 * Math.sin(sec * 3 + b.ph)) * clamp(grow * 3);
+      drawBloom(b, pop * clamp(grow * 3) * (1 - clamp((t - b.go + 0.015) / 0.03)), grow, sec);   // the petals, fading as the blossom bursts into sparks
+      if (t < b.go) {                                          // the soft glow at the heart of each blossom
+        var hp = bloomCenter(b, grow, sec), sr = b.R * sc * 2.2 * (0.9 + 0.12 * Math.sin(sec * 3 + b.ph)) * clamp(grow * 3);
         ctx.globalAlpha = pop * 0.55 * (1 - clamp((t - b.go + 0.02) / 0.02)); ctx.drawImage(SPR.glow, X(hp.x) - sr / 2, Y(hp.y) - sr / 2, sr, sr);
       }
     }
