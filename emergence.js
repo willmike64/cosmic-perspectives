@@ -51,6 +51,8 @@
     ember: sprite(16, [[0, 'rgba(255,220,150,1)'], [0.3, 'rgba(245,110,30,.55)'], [1, 'rgba(200,50,10,0)']]),
     fglow: sprite(128, [[0, 'rgba(255,230,170,.9)'], [0.18, 'rgba(255,150,50,.55)'], [0.5, 'rgba(220,80,20,.18)'], [1, 'rgba(160,40,10,0)']]),
     smoke: sprite(64, [[0, 'rgba(120,96,80,.35)'], [0.5, 'rgba(90,72,62,.14)'], [1, 'rgba(60,50,45,0)']]),
+    star: sprite(8, [[0, 'rgba(235,245,255,1)'], [0.35, 'rgba(170,205,255,.45)'], [1, 'rgba(120,160,255,0)']]),
+    atmo: sprite(64, [[0, 'rgba(110,170,255,0)'], [0.5, 'rgba(110,170,255,0)'], [0.56, 'rgba(110,170,255,.5)'], [1, 'rgba(60,110,220,0)']]),
     glow: sprite(128, [[0, 'rgba(255,250,235,1)'], [0.12, 'rgba(255,232,180,.85)'], [0.35, 'rgba(240,190,110,.32)'], [1, 'rgba(212,170,90,0)']])
   };
   var hue = [SPR.teal, SPR.rose, SPR.gold, SPR.white];
@@ -110,33 +112,37 @@
   }
   FIELD.forEach(function (e) { e.inside = insideGod(e.x, e.y); });
   HERO.forEach(function (e) { e.inside = insideGod(e.x, e.y); });
-  var earthSmall = null;                                     // a pre-shrunk Earth for the star field
-  function buildEarthSmall() { var c = document.createElement('canvas'); c.width = c.height = 32; c.getContext('2d').drawImage(earthImg, 0, 0, 32, 32); earthSmall = c; }
+  // Earths are lit like real planets: one sun (upper left), a soft terminator into night, and a thin blue atmosphere
+  var LX = -0.62, LY = -0.48, earthSmall = null, earthTiny = null, EDISC = null, ESHADE = null, EATMO = null, ES = 256;
+  function mk(n) { var c = document.createElement('canvas'); c.width = c.height = n; return c; }
+  function buildEarthSprites() {
+    var R = ES / 2;
+    EDISC = mk(ES); var d = EDISC.getContext('2d');            // the photo, trimmed to a clean disc
+    d.beginPath(); d.arc(R, R, R - 1, 0, 6.2832); d.clip(); d.filter = 'saturate(1.45) contrast(1.18) brightness(0.92)'; d.drawImage(earthImg, -ES * 0.03, -ES * 0.03, ES * 1.06, ES * 1.06);
+    ESHADE = mk(ES); var h = ESHADE.getContext('2d');           // terminator, night side and limb darkening
+    h.beginPath(); h.arc(R, R, R - 0.5, 0, 6.2832); h.clip();
+    var g = h.createRadialGradient(R + LX * R * 0.55, R + LY * R * 0.55, 0, R + LX * R * 0.55, R + LY * R * 0.55, R * 1.75);
+    g.addColorStop(0, 'rgba(2,4,12,0)'); g.addColorStop(0.3, 'rgba(2,4,12,0)'); g.addColorStop(0.46, 'rgba(2,5,16,.5)'); g.addColorStop(0.6, 'rgba(2,4,12,.88)'); g.addColorStop(1, 'rgba(1,2,8,.98)');
+    h.fillStyle = g; h.fillRect(0, 0, ES, ES);
+    var l = h.createRadialGradient(R, R, R * 0.6, R, R, R); l.addColorStop(0, 'rgba(0,0,10,0)'); l.addColorStop(1, 'rgba(0,0,10,.5)'); h.fillStyle = l; h.fillRect(0, 0, ES, ES);
+    var sp = h.createRadialGradient(R + LX * R * 0.42, R + LY * R * 0.42, 0, R + LX * R * 0.42, R + LY * R * 0.42, R * 0.5);
+    sp.addColorStop(0, 'rgba(255,255,255,.16)'); sp.addColorStop(1, 'rgba(255,255,255,0)'); h.fillStyle = sp; h.fillRect(0, 0, ES, ES);
+    var A = Math.round(ES * 1.25), AR = A / 2; EATMO = mk(A); var a = EATMO.getContext('2d');   // atmosphere: a thin glowing rim, bright on the day side
+    var rg = a.createRadialGradient(AR, AR, R * 0.86, AR, AR, R * 1.16);
+    rg.addColorStop(0, 'rgba(120,180,255,0)'); rg.addColorStop(0.42, 'rgba(150,200,255,.55)'); rg.addColorStop(0.5, 'rgba(120,175,255,.42)'); rg.addColorStop(1, 'rgba(60,110,220,0)');
+    a.fillStyle = rg; a.fillRect(0, 0, A, A);
+    a.globalCompositeOperation = 'destination-in';
+    var lg = a.createLinearGradient(AR + LX * AR, AR + LY * AR, AR - LX * AR, AR - LY * AR); lg.addColorStop(0, 'rgba(0,0,0,1)'); lg.addColorStop(0.55, 'rgba(0,0,0,.35)'); lg.addColorStop(1, 'rgba(0,0,0,.04)');
+    a.fillStyle = lg; a.fillRect(0, 0, A, A);
+    var full = mk(A), f = full.getContext('2d'), o = (A - ES) / 2;          // composed planet for the far field
+    f.drawImage(EDISC, o, o); f.drawImage(ESHADE, o, o); f.globalCompositeOperation = 'lighter'; f.drawImage(EATMO, 0, 0);
+    function down(src, n) { var c = src, sz = src.width; while (sz / 2 > n) { sz = Math.round(sz / 2); var t = mk(sz); t.getContext('2d').drawImage(c, 0, 0, sz, sz); c = t; } var out = mk(n); var oc = out.getContext('2d'); oc.imageSmoothingQuality = 'high'; oc.drawImage(c, 0, 0, n, n); return out; }
+    earthSmall = down(full, 80); earthTiny = down(full, 20);
+  }
+  var EK = 1.25;                                             // sprite size relative to the planet's diameter (room for the atmosphere)
 
-  // ---------- stardust being: a tiny human form sampled from a drawn silhouette ----------
-  var SIL = [];
-  (function () {
-    var W = 240, H = 340, c = document.createElement('canvas'); c.width = W; c.height = H;
-    var g = c.getContext('2d'); g.fillStyle = '#fff';
-    function poly(pts) { g.beginPath(); g.moveTo(pts[0], pts[1]); for (var i = 2; i < pts.length; i += 2) g.lineTo(pts[i], pts[i + 1]); g.closePath(); g.fill(); }
-    function limb(x1, y1, x2, y2, w1, w2) {
-      var a = Math.atan2(y2 - y1, x2 - x1) + Math.PI / 2, c1 = Math.cos(a), s1 = Math.sin(a);
-      poly([x1 + c1 * w1, y1 + s1 * w1, x2 + c1 * w2, y2 + s1 * w2, x2 - c1 * w2, y2 - s1 * w2, x1 - c1 * w1, y1 - s1 * w1]);
-      g.beginPath(); g.arc(x1, y1, w1, 0, 6.2832); g.fill(); g.beginPath(); g.arc(x2, y2, w2, 0, 6.2832); g.fill();
-    }
-    g.beginPath(); g.ellipse(120, 40, 17, 21, 0, 0, 6.2832); g.fill();
-    limb(120, 56, 120, 70, 7, 8);
-    g.beginPath(); g.moveTo(96, 78); g.bezierCurveTo(108, 70, 132, 70, 144, 78);
-    g.bezierCurveTo(141, 110, 134, 132, 134, 150); g.bezierCurveTo(140, 168, 140, 180, 136, 190);
-    g.lineTo(104, 190); g.bezierCurveTo(100, 180, 100, 168, 106, 150); g.bezierCurveTo(106, 132, 99, 110, 96, 78); g.fill();
-    limb(100, 82, 64, 56, 9, 7); limb(64, 56, 34, 22, 7, 5);
-    limb(140, 82, 176, 56, 9, 7); limb(176, 56, 206, 22, 7, 5);
-    limb(112, 186, 108, 258, 12, 8); limb(108, 258, 106, 326, 8, 6);
-    limb(128, 186, 132, 258, 12, 8); limb(132, 258, 134, 326, 8, 6);
-    var d = g.getImageData(0, 0, W, H).data;
-    for (var y = 2; y < H; y += 3) for (var x = 2; x < W; x += 3) if (d[(y * W + x) * 4 + 3] > 128) SIL.push([(x - 120) / 310, (y - 330) / 310]);
-  })();
-
+  // ---------- stardust beings: wisps of living light that rise and curl off each Earth ----------
+  // (no drawn figure; each being is a bright core trailing a ribbon of stardust)
   // ---------- particles ----------
   var N = small ? 700 : 1300, PER = small ? 30 : 48, P = [], B = [], SP = [];
   function rnd(a, b) { return a + Math.random() * (b - a); }
@@ -155,13 +161,15 @@
     // stardust beings on the near Earths; each is drawn toward its nearest light
     B = [];
     HERO.forEach(function (e) {
-      for (var j = 0; j < e.n; j++) {
-        var ang = -Math.PI / 2 + (e.n === 1 ? 0 : (j - (e.n - 1) / 2) * 0.62), h = Math.max(e.r * 1.15, 0.034 * IMG_H);
-        var being = { e: e, ang: ang, h: h, pop: e.t + 0.1 + j * 0.035 + rnd(0, 0.02), go: rnd(0.55, 0.6), god: nearestGod(e.x, e.y - e.r), pts: [] };
+      var nb = e.n;                                        // a few wisps per near Earth, leaving from the day side at uneven points
+      for (var j = 0; j < nb; j++) {
+        var ang = -Math.PI / 2 + rnd(-1.25, 1.25), L = Math.max(e.r * 1.5, 0.05 * IMG_H);
+        var being = { e: e, ang: ang, L: L, curl: rnd(0.5, 1.1) * (Math.random() < 0.5 ? -1 : 1), pop: e.t + 0.08 + j * 0.045 + rnd(0, 0.03), go: rnd(0.55, 0.6),
+                      god: nearestGod(e.x, e.y - e.r), ph: rnd(0, 6.28), pts: [] };
         for (var q = 0; q < PER; q++) {
-          var sp = SIL[(Math.random() * SIL.length) | 0];
-          being.pts.push({ u: sp[0] + rnd(-0.01, 0.01), v: sp[1], f: null, bend: rnd(-0.5, 0.5), lag: rnd(0, 0.05), size: rnd(0.7, 1.4), ph: rnd(0, 6.28),
-                           spr: Math.random() < 0.5 ? SPR.white : SPR.gold, rise: { x: rnd(-0.18, 0.18) * IMG_W, y: -rnd(0.2, 0.6) * IMG_H, gal: Math.random() < 0.2 } });
+          var k = Math.pow(q / (PER - 1), 1.3);                 // 0 = bright head, 1 = faint end of the tail at the surface
+          being.pts.push({ k: k, j: rnd(-1, 1), f: null, bend: rnd(-0.35, 0.35), lag: k * 0.05, size: (1.05 - k * 0.6) * rnd(0.8, 1.15), ph: rnd(0, 6.28),
+                           spr: k < 0.08 ? SPR.white : Math.random() < 0.75 ? SPR.gold : SPR.white, rise: { x: rnd(-0.18, 0.18) * IMG_W, y: -rnd(0.2, 0.6) * IMG_H, gal: Math.random() < 0.2 } });
         }
         B.push(being);
       }
@@ -184,11 +192,14 @@
     SP.forEach(function (p) { p.f = pick(); });
   }
   function godPoint(gi, f, flip) { var r = flameRect(GODS[gi]), u = flip ? 1 - f[0] : f[0]; return { x: r.x + u * r.w, y: r.y + f[1] * r.h }; }
-  function beingPos(b, p) {
-    var ca = Math.cos(b.ang + Math.PI / 2), sa = Math.sin(b.ang + Math.PI / 2);
-    var fx = b.e.x + Math.cos(b.ang) * b.e.r * 0.98, fy = b.e.y + Math.sin(b.ang) * b.e.r * 0.98;
-    var lx = p.u * b.h, ly = p.v * b.h;
-    return { x: fx + lx * ca - ly * sa, y: fy + lx * sa + ly * ca };
+  // a point along a wisp: it leaves the surface along the normal, then bends upward and curls
+  function beingPos(b, p, grow, sec) {
+    var ox0 = Math.cos(b.ang), oy0 = Math.sin(b.ang), dh = b.e.r * 0.3 + b.L * 2.2 * grow, d = Math.max(0, dh - b.L * 0.3 * p.k * (0.4 + grow));
+    var bx0 = b.e.x + ox0 * b.e.r * 0.99, by0 = b.e.y + oy0 * b.e.r * 0.99;
+    var u = Math.min(d / b.L, 2.2), dirx = ox0 * (1 - u * 0.3), diry = oy0 * (1 - u * 0.3) - u * 0.6, n = Math.hypot(dirx, diry) || 1;
+    var px = -oy0, py = ox0, sw = Math.sin(sec * 2.2 + b.ph + u * 3.2) * b.L * 0.07 * u + b.curl * b.L * 0.12 * u * u;
+    var spread = p.j * b.L * 0.022 * (0.4 + p.k * 1.2);
+    return { x: bx0 + dirx / n * d + px * (sw + spread), y: by0 + diry / n * d + py * (sw + spread) };
   }
   var ignitions = []; for (var k = 0; k < 9; k++) ignitions.push({ x: rnd(0.7, 0.95) * IMG_W, y: rnd(0.15, 0.8) * IMG_H, at: rnd(0.0, 0.2), s: rnd(0.6, 1.2) });
 
@@ -272,7 +283,7 @@
     var v = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.2, W / 2, H / 2, Math.max(W, H) * 0.75);
     v.addColorStop(0, 'rgba(8,12,20,0)'); v.addColorStop(1, 'rgba(8,12,20,.55)');
     ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
-    if (!earthSmall && earthImg.naturalWidth) buildEarthSmall();
+    if (!earthSmall && earthImg.naturalWidth) buildEarthSprites();
 
     var GA = GODS.map(function (g) { return godAlpha(g, t); });
     var energy = 0.4 + 0.6 * ease((t - 0.62) / 0.1), allA = band(t, 0.58, 0.68, 0.86, 0.97);
@@ -291,9 +302,9 @@
         var e = FIELD[fi], a = band(t, e.t - 0.01, e.t + 0.03, 0.86, 0.97) * (e.inside >= 0 ? 1 - 0.85 * GA[e.inside] : 1 - 0.3 * allA);
         if (a <= 0) continue;
         var r = e.r * sc, tw = 0.65 + 0.35 * Math.sin(sec * 2.3 + e.tw);
-        if (r < 1.6) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * 0.55 * tw; ctx.drawImage(SPR.teal, X(e.x) - 2.2, Y(e.y) - 2.2, 4.4, 4.4); continue; }
-        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * 0.28 * tw; var gr2 = r * 2.4; ctx.drawImage(SPR.teal, X(e.x) - gr2, Y(e.y) - gr2, gr2 * 2, gr2 * 2);
-        { ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a * (0.75 + 0.25 * tw); ctx.drawImage(earthSmall, X(e.x) - r, Y(e.y) - r, r * 2, r * 2); }
+        if (r < 1.6) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * 0.5 * tw; ctx.drawImage(SPR.star, X(e.x) - 1.6, Y(e.y) - 1.6, 3.2, 3.2); continue; }
+        var rs = r * EK, spr2 = r < 6 ? earthTiny : earthSmall;
+        ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a * (0.85 + 0.15 * tw); ctx.drawImage(spr2, X(e.x) - rs, Y(e.y) - rs, rs * 2, rs * 2);
       }
     }
     // the near Earths emerge — glow, flash, then the planet itself
@@ -302,12 +313,14 @@
       if (a <= 0) return;
       var grow = 0.55 + 0.45 * easeOut((t - e.t + 0.02) / 0.08), r = e.r * sc * grow;
       ctx.globalCompositeOperation = 'lighter';
-      ctx.globalAlpha = a * 0.55; var ar = r * 2.6; ctx.drawImage(SPR.teal, X(e.x) - ar, Y(e.y) - ar, ar * 2, ar * 2);
+      ctx.globalAlpha = a * 0.16; var ar = r * 1.9; ctx.drawImage(SPR.atmo, X(e.x) - ar, Y(e.y) - ar, ar * 2, ar * 2);
       var fl = band(t, e.t - 0.02, e.t, e.t + 0.01, e.t + 0.06);
-      if (fl > 0) { ctx.globalAlpha = fl; var fr0 = r * 3; ctx.drawImage(SPR.white, X(e.x) - fr0, Y(e.y) - fr0, fr0 * 2, fr0 * 2); }
-      if (earthImg.naturalWidth) {
+      if (fl > 0) { ctx.globalAlpha = fl * 0.55; var fr0 = r * 2.1; ctx.drawImage(SPR.white, X(e.x) - fr0, Y(e.y) - fr0, fr0 * 2, fr0 * 2); }
+      if (EDISC) {
         ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a;
-        ctx.save(); ctx.translate(X(e.x), Y(e.y)); ctx.rotate(e.rot + sec * 0.03); ctx.drawImage(earthImg, -r, -r, r * 2, r * 2); ctx.restore();
+        ctx.save(); ctx.translate(X(e.x), Y(e.y)); ctx.rotate(e.rot + sec * 0.03); ctx.drawImage(EDISC, -r, -r, r * 2, r * 2); ctx.restore();
+        ctx.drawImage(ESHADE, X(e.x) - r, Y(e.y) - r, r * 2, r * 2);
+        ctx.globalCompositeOperation = 'lighter'; var ra = r * EK; ctx.drawImage(EATMO, X(e.x) - ra, Y(e.y) - ra, ra * 2, ra * 2);
       }
     });
 
@@ -353,14 +366,14 @@
     for (var bi = 0; bi < B.length; bi++) {
       var b = B[bi], pop = clamp((t - b.pop) / 0.03), gd = GODS[b.god];
       if (pop <= 0) continue;
-      var bounce = pop < 1 ? 0.6 + 0.6 * Math.sin(pop * Math.PI * 0.85) : 1;
+      var grow = easeOut((t - b.pop) / 0.14);
       for (var qi = 0; qi < b.pts.length; qi++) {
-        var bp = b.pts[qi], pos = beingPos(b, bp), bx, by, ba, bs = bp.size * bsz, spr = bp.spr;
-        var sx2 = b.e.x + (pos.x - b.e.x) * bounce, sy2 = b.e.y + (pos.y - b.e.y) * bounce;
+        var bp = b.pts[qi], pos = beingPos(b, bp, grow, sec), bx, by, ba, bs = bp.size * bsz, spr = bp.spr;
+        var sx2 = pos.x, sy2 = pos.y;
         var go0 = b.go + bp.lag, go1 = go0 + 0.1;
         var tp = bp.f ? godPoint(b.god, bp.f, gd.flip) : { x: gd.x, y: gd.y };
         var tgx = tp.x + Math.sin(sec * 3 + bp.ph) * 0.004 * gd.h, tgy = tp.y + Math.cos(sec * 2.6 + bp.ph) * 0.004 * gd.h - ((sec * 0.6 + bp.ph) % 1) * 0.012 * gd.h;
-        if (t < go0) { bx = sx2 + Math.sin(now / 420 + bp.ph) * 0.0012 * IMG_H; by = sy2 + Math.cos(now / 500 + bp.ph) * 0.0012 * IMG_H; ba = pop * 0.95; }
+        if (t < go0) { bx = sx2; by = sy2; ba = pop * (0.6 - bp.k * 0.5) * clamp(grow * 4); }
         else if (t < go1) {
           var g2 = ease((t - go0) / (go1 - go0)), ig = 1 - g2;
           var cxp = (sx2 + tgx) / 2 - (tgy - sy2) * bp.bend * 0.6, cyp = (sy2 + tgy) / 2 + (tgx - sx2) * bp.bend * 0.6 - 0.1 * IMG_H;
@@ -376,8 +389,10 @@
         ctx.globalAlpha = ba * (0.75 + 0.25 * Math.sin(now / 160 + bp.ph));
         ctx.drawImage(spr, X(bx) - bs, Y(by) - bs, bs * 2, bs * 2);
       }
-      var spk = band(t, b.pop + 0.01, b.pop + 0.03, b.pop + 0.05, b.pop + 0.12);
-      if (spk > 0) { var hp = beingPos(b, { u: 0, v: -0.9 }), sr = b.h * sc * 0.9; ctx.globalAlpha = spk * 0.9; ctx.drawImage(SPR.glow, X(hp.x) - sr / 2, Y(hp.y) - sr / 2, sr, sr); }
+      if (t < b.go) {                                          // the soft glow of each wisp's head
+        var hp = beingPos(b, { k: 0, j: 0 }, grow, sec), sr = b.e.r * sc * (0.9 + 0.15 * Math.sin(sec * 3 + b.ph)) * clamp(grow * 3);
+        ctx.globalAlpha = pop * 0.55 * (1 - clamp((t - b.go + 0.02) / 0.02)); ctx.drawImage(SPR.glow, X(hp.x) - sr / 2, Y(hp.y) - sr / 2, sr, sr);
+      }
     }
     // a flash as each god ignites
     for (var gj = 0; gj < GODS.length; gj++) {
