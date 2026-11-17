@@ -1,7 +1,7 @@
 /* Cosmic Perspectives — "Emergence" hero animation
    A 14-second repeating cycle: a stellar nursery beside a spiral galaxy releases stardust;
-   the dust forms an Earth, then another, then Earths as many as the stars. Stardust beings
-   bloom like lotuses of light on countless Earths; the few who find the light gather into gods of flame, each
+   the dust forms an Earth, then another, then Earths as many as the stars. Points of light
+   stream outward from countless Earths; the lights that find their way gather into gods of flame, each
    one the artist's own photograph, "Dancing Fire Spirit". Many gods, though far fewer than
    the Earths. They dance, then return to the cosmos as embers.
    Pure canvas; no dependencies. Respects prefers-reduced-motion. */
@@ -46,6 +46,8 @@
     gold: sprite(16, [[0, 'rgba(255,240,200,1)'], [0.25, 'rgba(240,195,110,.55)'], [1, 'rgba(212,170,90,0)']]),
     teal: sprite(16, [[0, 'rgba(220,255,250,1)'], [0.25, 'rgba(110,210,195,.5)'], [1, 'rgba(77,184,168,0)']]),
     rose: sprite(16, [[0, 'rgba(255,225,230,1)'], [0.25, 'rgba(235,140,160,.5)'], [1, 'rgba(220,110,140,0)']]),
+    pt: sprite(24, [[0, 'rgba(255,255,250,1)'], [0.1, 'rgba(255,245,215,1)'], [0.28, 'rgba(250,215,140,.38)'], [1, 'rgba(240,190,110,0)']]),
+    ptr: sprite(24, [[0, 'rgba(255,250,250,1)'], [0.1, 'rgba(255,225,230,1)'], [0.28, 'rgba(240,160,180,.34)'], [1, 'rgba(230,130,160,0)']]),
     white: sprite(16, [[0, 'rgba(255,255,255,1)'], [0.3, 'rgba(255,248,230,.6)'], [1, 'rgba(255,240,210,0)']]),
     flame: sprite(16, [[0, 'rgba(255,248,215,1)'], [0.25, 'rgba(255,170,60,.6)'], [1, 'rgba(240,90,20,0)']]),
     ember: sprite(16, [[0, 'rgba(255,220,150,1)'], [0.3, 'rgba(245,110,30,.55)'], [1, 'rgba(200,50,10,0)']]),
@@ -158,24 +160,19 @@
       var bend = rnd(0.2, 0.55) * (Math.random() < 0.5 ? -1 : 1), mx = (s.x + tx) / 2, my = (s.y + ty) / 2;
       P.push({ s: s, t: { x: tx, y: ty }, c: { x: mx - (ty - s.y) * bend, y: my + (tx - s.x) * bend }, e: e, d: rnd(0, 0.05), size: rnd(0.6, 1.5), spr: hue[(Math.random() * 3) | 0], ph: rnd(0, 6.28) });
     }
-    // stardust beings on the near Earths; each is drawn toward its nearest light
+    // streams of light: points of light pour outward from every near Earth, then gather into the gods of flame
     B = [];
+    var PE = small ? 80 : 150;
     HERO.forEach(function (e) {
-      var nb = e.n;                                        // a few wisps per near Earth, leaving from the day side at uneven points
-      for (var j = 0; j < nb; j++) {
-        var ang = -Math.PI / 2 + rnd(-1.25, 1.25), L = Math.max(e.r * 1.5, 0.05 * IMG_H);
-        var being = { e: e, ang: ang, L: L, curl: rnd(0.5, 1.1) * (Math.random() < 0.5 ? -1 : 1), pop: e.t + 0.08 + j * 0.045 + rnd(0, 0.03), go: rnd(0.55, 0.6),
-                      god: nearestGod(e.x, e.y - e.r), ph: rnd(0, 6.28), rot0: rnd(0, 6.28), R: Math.max(e.r * 0.85, 0.03 * IMG_H), pts: [] };
-        for (var q = 0; q < PER; q++) {
-          // part: 0 = the bright seed at the heart, 1 = a petal, 2 = the halo ring
-          var part = q < 4 ? 0 : q < PER - 8 ? 1 : 2, sgn = Math.random() < 0.5 ? -1 : 1;
-          being.pts.push({ part: part, petal: q % 6, s: part === 1 ? Math.pow(Math.random(), 0.8) : 0, w: sgn * rnd(0.55, 1), ra: rnd(0, 6.28),
-                           j: rnd(-1, 1), f: null, bend: rnd(-0.35, 0.35), lag: rnd(0, 0.05), ph: rnd(0, 6.28),
-                           size: part === 0 ? rnd(1.1, 1.4) : part === 2 ? rnd(0.45, 0.65) : rnd(0.6, 0.95),
-                           spr: part === 0 ? SPR.white : part === 2 ? SPR.white : Math.random() < 0.7 ? SPR.gold : SPR.rose,
-                           rise: { x: rnd(-0.18, 0.18) * IMG_W, y: -rnd(0.2, 0.6) * IMG_H, gal: Math.random() < 0.2 } });
-        }
-        B.push(being);
+      var n = Math.round(PE * (0.55 + 0.3 * e.n)), god = nearestGod(e.x, e.y - e.r), K = 6 + 3 * e.n, a0 = rnd(0, 6.2832), rays = [];
+      for (var k = 0; k < K; k++) rays.push({ ang: a0 + k * 6.2832 / K + rnd(-0.25, 0.25), curl: rnd(0.12, 0.4) * (Math.random() < 0.5 ? -1 : 1), L: Math.max(e.r * rnd(2.6, 5), rnd(0.1, 0.19) * IMG_H) });
+      for (var q = 0; q < n; q++) {
+        var bright = Math.random() < 0.22, ry = rays[q % K], slot = Math.floor(q / K) / Math.ceil(n / K);
+        B.push({ e: e, god: god, ang: ry.ang + rnd(-0.03, 0.03), curl: ry.curl, te: e.t + 0.04, slot: (slot + rnd(-0.01, 0.01) + 1) % 1, fl: rnd(0.9, 1.1),
+                 L: ry.L * rnd(0.97, 1.03), go: rnd(0.535, 0.6), lag: rnd(0, 0.06), f: null,
+                 bend: rnd(-0.35, 0.35), ph: rnd(0, 6.28), size: bright ? rnd(1.1, 1.5) : rnd(0.45, 0.95),
+                 spr: Math.random() < 0.8 ? SPR.pt : SPR.ptr,
+                 rise: { x: rnd(-0.18, 0.18) * IMG_W, y: -rnd(0.2, 0.6) * IMG_H, gal: Math.random() < 0.2 } });
       }
     });
     // sparks of consciousness rising from the far Earths: many rise; some find the light
@@ -192,48 +189,16 @@
   function assignFlameTargets() {
     if (!flamePts) return;
     function pick() { return flamePts[(Math.random() * flamePts.length) | 0]; }
-    B.forEach(function (b) { b.pts.forEach(function (p) { p.f = pick(); }); });
+    B.forEach(function (b) { b.f = pick(); });
     SP.forEach(function (p) { p.f = pick(); });
   }
   function godPoint(gi, f, flip) { var r = flameRect(GODS[gi]), u = flip ? 1 - f[0] : f[0]; return { x: r.x + u * r.w, y: r.y + f[1] * r.h }; }
-  // the heart of a blossom: it lifts gently off the day side of its Earth and bobs there
-  function bloomCenter(b, grow, sec) {
-    var nx = Math.cos(b.ang), ny = Math.sin(b.ang), lift = b.e.r * (1.05 + 0.6 * grow) + b.R * 0.9 * grow;
-    return { x: b.e.x + nx * lift + Math.sin(sec * 1.1 + b.ph) * b.R * 0.06, y: b.e.y + ny * lift - b.R * 0.25 * grow + Math.cos(sec * 1.4 + b.ph) * b.R * 0.08 };
-  }
-  // a point of a blossom: six petals unfold and slowly turn; a faint halo ring breathes around them
-  function beingPos(b, p, grow, sec) {
-    var c = bloomCenter(b, grow, sec), open = easeOut(grow), turn = b.rot0 + sec * 0.22 * (b.curl > 0 ? 1 : -1);
-    if (p.part === 0) return { x: c.x + p.j * b.R * 0.04, y: c.y + Math.sin(sec * 3 + p.ph) * b.R * 0.04 };
-    if (p.part === 2) { var hr = b.R * (0.95 + 0.06 * Math.sin(sec * 2 + b.ph)) * open, ha = p.ra + turn * 0.5; return { x: c.x + Math.cos(ha) * hr, y: c.y + Math.sin(ha) * hr }; }
-    var th = turn + p.petal * Math.PI / 3 + p.w * 0.36 * Math.sin(Math.PI * p.s), r = p.s * b.R * 0.82 * open * (0.97 + 0.03 * Math.sin(sec * 2.4 + p.petal));
-    return { x: c.x + Math.cos(th) * r, y: c.y + Math.sin(th) * r };
-  }
-  // the blossom itself: six petals of gold light, a white-hot seed and a thin breathing halo
-  function drawBloom(b, alpha, grow, sec) {
-    if (alpha <= 0.01) return;
-    var c = bloomCenter(b, grow, sec), cx = X(c.x), cy = Y(c.y), open = easeOut(grow), R = b.R * sc * open;
-    if (R < 1.5) return;
-    var turn = b.rot0 + sec * 0.22 * (b.curl > 0 ? 1 : -1), breathe = 1 + 0.05 * Math.sin(sec * 2.4 + b.ph);
-    ctx.save(); ctx.translate(cx, cy); ctx.globalCompositeOperation = 'lighter';
-    var pg = ctx.createRadialGradient(0, 0, 0, 0, 0, R);
-    pg.addColorStop(0, 'rgba(255,246,220,.95)'); pg.addColorStop(0.35, 'rgba(250,205,120,.6)'); pg.addColorStop(0.8, 'rgba(235,150,90,.22)'); pg.addColorStop(1, 'rgba(220,110,140,0)');
-    for (var layer = 0; layer < 2; layer++) {                   // an outer ring of six petals, and an inner ring turned between them
-      var Lr = R * (layer ? 0.62 : 1) * breathe, off = layer ? Math.PI / 6 : 0, wd = layer ? 0.75 : 0.62;
-      ctx.globalAlpha = alpha * (layer ? 0.75 : 0.55);
-      ctx.fillStyle = pg;
-      for (var k = 0; k < 6; k++) {
-        var th = turn * (layer ? -0.6 : 1) + off + k * Math.PI / 3, ca = Math.cos(th), sa = Math.sin(th);
-        var lx = Math.cos(th - wd) * Lr * 0.8, ly = Math.sin(th - wd) * Lr * 0.8, rx = Math.cos(th + wd) * Lr * 0.8, ry = Math.sin(th + wd) * Lr * 0.8;
-        ctx.beginPath(); ctx.moveTo(0, 0);
-        ctx.quadraticCurveTo(lx, ly, ca * Lr, sa * Lr);
-        ctx.quadraticCurveTo(rx, ry, 0, 0); ctx.fill();
-      }
-    }
-    ctx.globalAlpha = alpha * 0.35; ctx.strokeStyle = 'rgba(255,236,190,1)'; ctx.lineWidth = Math.max(0.6, R * 0.04);
-    ctx.beginPath(); ctx.arc(0, 0, R * 1.18 * breathe, 0, 6.2832); ctx.stroke();
-    ctx.globalAlpha = alpha; var cr = Math.max(2, R * 0.42); ctx.drawImage(SPR.white, -cr, -cr, cr * 2, cr * 2);
-    ctx.restore();
+  // where a point of light is while it streams outward from its Earth (it curves gently as it travels)
+  function streamPos(b, t, sec) {
+    // each ray is a steady river of light: points flow out along a fixed curve, the stream first reaching out, then running continuously
+    var dt = Math.max(0, t - b.te), u = ((dt / 0.085) * b.fl + b.slot) % 1, reach = easeOut(dt / 0.07);
+    var d = b.e.r * 1.02 + b.L * u, th = b.ang + b.curl * u * 0.9, wob = Math.sin(sec * 2.2 + b.ph) * b.e.r * 0.02;
+    return { x: b.e.x + Math.cos(th) * d + wob, y: b.e.y + Math.sin(th) * d - wob, u: u, vis: u <= reach ? Math.sin(Math.PI * Math.min(1, u * 1.15 + 0.08)) : 0 };
   }
   var ignitions = []; for (var k = 0; k < 9; k++) ignitions.push({ x: rnd(0.7, 0.95) * IMG_W, y: rnd(0.15, 0.8) * IMG_H, at: rnd(0.0, 0.2), s: rnd(0.6, 1.2) });
 
@@ -242,7 +207,7 @@
   function ease(v) { v = clamp(v); return v * v * (3 - 2 * v); }
   function easeOut(v) { v = clamp(v); return 1 - Math.pow(1 - v, 3); }
   function band(t, a, b, c, d) { return t < a || t > d ? 0 : t < b ? (t - a) / (b - a) : t <= c ? 1 : (d - t) / (d - c); }
-  function godAlpha(g, t) { return band(t, g.t - 0.02, g.t + 0.08, 0.86, 0.97); }
+  function godAlpha(g, t) { return band(t, g.t + 0.03, g.t + 0.13, 0.86, 0.97); }   // she takes form as her points of light gather
 
   // ---------- layout ----------
   var W = 0, H = 0, dpr = 1, sc = 1, ox = 0, oy = 0;
@@ -395,39 +360,31 @@
       ctx.drawImage(sspr, X(sx) - ss, Y(sy) - ss, ss * 2, ss * 2);
     }
 
-    // 6. stardust beings on the near Earths pop up, then stream to the light nearest them
-    var bsz = Math.max(0.8, sc * 3.2);
+    // 6. points of light stream outward from the near Earths, then gather into the gods of flame
+    var bsz = Math.max(2.4, sc * 9.0);
     for (var bi = 0; bi < B.length; bi++) {
-      var b = B[bi], pop = clamp((t - b.pop) / 0.03), gd = GODS[b.god];
-      if (pop <= 0) continue;
-      var grow = easeOut((t - b.pop) / 0.14);
-      for (var qi = 0; qi < b.pts.length; qi++) {
-        var bp = b.pts[qi], pos = beingPos(b, bp, grow, sec), bx, by, ba, bs = bp.size * bsz, spr = bp.spr;
-        var sx2 = pos.x, sy2 = pos.y;
-        var go0 = b.go + bp.lag, go1 = go0 + 0.1;
-        var tp = bp.f ? godPoint(b.god, bp.f, gd.flip) : { x: gd.x, y: gd.y };
-        var tgx = tp.x + Math.sin(sec * 3 + bp.ph) * 0.004 * gd.h, tgy = tp.y + Math.cos(sec * 2.6 + bp.ph) * 0.004 * gd.h - ((sec * 0.6 + bp.ph) % 1) * 0.012 * gd.h;
-        if (t < go0) { bx = sx2; by = sy2; ba = pop * (bp.part === 0 ? 0.9 : bp.part === 2 ? 0.3 : 0.32 - bp.s * 0.12) * clamp(grow * 4); }
-        else if (t < go1) {
-          var g2 = ease((t - go0) / (go1 - go0)), ig = 1 - g2;
-          var cxp = (sx2 + tgx) / 2 - (tgy - sy2) * bp.bend * 0.6, cyp = (sy2 + tgy) / 2 + (tgx - sx2) * bp.bend * 0.6 - 0.1 * IMG_H;
-          bx = ig * ig * sx2 + 2 * ig * g2 * cxp + g2 * g2 * tgx; by = ig * ig * sy2 + 2 * ig * g2 * cyp + g2 * g2 * tgy;
-          ba = 0.95; bs *= 1 + 0.4 * Math.sin(g2 * Math.PI); spr = g2 > 0.7 ? SPR.flame : spr;
-        } else if (t < 0.86) { bx = tgx; by = tgy; ba = 0.6; spr = bp.ph > 3.5 ? SPR.flame : SPR.ember; }
-        else {
-          var rb = easeOut((t - 0.86) / (0.12 - bp.lag)), ex = bp.rise.gal ? GAL.x : tgx + bp.rise.x, ey = bp.rise.gal ? GAL.y : tgy + bp.rise.y;
-          bx = tgx + (ex - tgx) * rb + Math.sin(sec * 3 + bp.ph) * 6 * rb; by = tgy + (ey - tgy) * rb;
-          ba = (1 - clamp((t - 0.88) / 0.1)) * 0.9; spr = rb < 0.3 ? SPR.flame : SPR.ember; bs *= 1.1 - 0.5 * rb;
-        }
-        if (ba <= 0.01) continue;
-        ctx.globalAlpha = ba * (0.75 + 0.25 * Math.sin(now / 160 + bp.ph));
-        ctx.drawImage(spr, X(bx) - bs, Y(by) - bs, bs * 2, bs * 2);
+      var b = B[bi], gd = GODS[b.god];
+      if (t < b.te) continue;
+      var go0 = b.go + b.lag, go1 = go0 + 0.1, bx, by, ba, bs = b.size * bsz, spr = b.spr;
+      var tp = b.f ? godPoint(b.god, b.f, gd.flip) : { x: gd.x, y: gd.y };
+      var tgx = tp.x + Math.sin(sec * 3 + b.ph) * 0.004 * gd.h, tgy = tp.y + Math.cos(sec * 2.6 + b.ph) * 0.004 * gd.h - ((sec * 0.6 + b.ph) % 1) * 0.012 * gd.h;
+      if (t < go0) {
+        var sp0 = streamPos(b, t, sec); bx = sp0.x; by = sp0.y;
+        ba = sp0.vis * (0.7 + 0.3 * Math.sin(sec * 4 + b.ph * 3) * Math.sin(sec * 4 + b.ph * 3));
+      } else if (t < go1) {
+        var s0 = streamPos(b, go0, sec), g2 = ease((t - go0) / (go1 - go0)), ig = 1 - g2;
+        var cxp = (s0.x + tgx) / 2 - (tgy - s0.y) * b.bend * 0.6, cyp = (s0.y + tgy) / 2 + (tgx - s0.x) * b.bend * 0.6 - 0.06 * IMG_H;
+        bx = ig * ig * s0.x + 2 * ig * g2 * cxp + g2 * g2 * tgx; by = ig * ig * s0.y + 2 * ig * g2 * cyp + g2 * g2 * tgy;
+        ba = 0.95; spr = g2 > 0.75 ? SPR.flame : spr;
+      } else if (t < 0.86) { bx = tgx; by = tgy; ba = 0.62 * (1 - 0.45 * GA[b.god]) + 0.2; spr = b.ph > 3.5 ? SPR.flame : SPR.ember; }
+      else {
+        var rb = easeOut((t - 0.86) / (0.12 - b.lag * 0.5)), ex = b.rise.gal ? GAL.x : tgx + b.rise.x, ey = b.rise.gal ? GAL.y : tgy + b.rise.y;
+        bx = tgx + (ex - tgx) * rb + Math.sin(sec * 3 + b.ph) * 6 * rb; by = tgy + (ey - tgy) * rb;
+        ba = (1 - clamp((t - 0.88) / 0.1)) * 0.9; spr = rb < 0.3 ? SPR.flame : SPR.ember; bs *= 1.1 - 0.5 * rb;
       }
-      drawBloom(b, pop * clamp(grow * 3) * (1 - clamp((t - b.go + 0.015) / 0.03)), grow, sec);   // the petals, fading as the blossom bursts into sparks
-      if (t < b.go) {                                          // the soft glow at the heart of each blossom
-        var hp = bloomCenter(b, grow, sec), sr = b.R * sc * 2.2 * (0.9 + 0.12 * Math.sin(sec * 3 + b.ph)) * clamp(grow * 3);
-        ctx.globalAlpha = pop * 0.55 * (1 - clamp((t - b.go + 0.02) / 0.02)); ctx.drawImage(SPR.glow, X(hp.x) - sr / 2, Y(hp.y) - sr / 2, sr, sr);
-      }
+      if (ba <= 0.01) continue;
+      ctx.globalAlpha = ba * (0.8 + 0.2 * Math.sin(now / 160 + b.ph));
+      ctx.drawImage(spr, X(bx) - bs, Y(by) - bs, bs * 2, bs * 2);
     }
     // a flash as each god ignites
     for (var gj = 0; gj < GODS.length; gj++) {
