@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Library — Cosmic Perspectives</title>
+  <meta name="description" content="Recent peer-reviewed papers on galaxies, JWST, fine-tuning, consciousness, religion and science, Indigenous astronomy, the epigenome, hypoxia, breath and the brain, each with a plain summary and a link to read it." />
+  <meta property="og:title" content="Research Library — Cosmic Perspectives" />
+  <meta property="og:description" content="Recent peer-reviewed research behind every section of Cosmic Perspectives, with plain summaries and links to read each paper." />
+  <meta property="og:image" content="https://cosmicperspectives.elyriandoctrine.com/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Sans+3:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+      --space-1: 0.25rem; --space-2: 0.5rem;  --space-3: 0.75rem;
+      --space-4: 1rem;    --space-5: 1.25rem; --space-6: 1.5rem;
+      --space-8: 2rem;    --space-10: 2.5rem; --space-12: 3rem;
+      --space-16: 4rem;
+      --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-full: 9999px;
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --content-wide: 1160px;
+      --font-display: 'Instrument Serif', 'Georgia', serif;
+      --font-body:    'Source Sans 3', system-ui, sans-serif;
+      --font-read:    'Source Serif 4', 'Georgia', serif;
+      --font-mono:    'DM Mono', monospace;
+
+      --color-bg:           #080c14;
+      --color-surface:      #0d1320;
+      --color-surface-2:    #141e30;
+      --color-surface-3:    #1a2540;
+      --color-border:       #243050;
+      --color-divider:      #1e2a44;
+      --color-text:         #dde1ec;
+      --color-text-muted:   #8f9bba;
+      --color-text-faint:   #6b7896;
+      --color-primary:      #7eb8d4;
+      --color-primary-hover:#a5d0e8;
+      --color-accent:       #d4aa5a;
+      --color-accent-hover: #e8c87a;
+      --color-accent-dim:   rgba(212, 170, 90, 0.10);
+      --color-teal:         #4db8a8;
+      --color-nebula:       #b39ad6;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    body { min-height: 100dvh; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: var(--text-base); line-height: 1.6; }
+    svg { display: block; }
+    input, button, select { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: none; }
+    h1, h2, h3 { text-wrap: balance; line-height: 1.2; font-weight: 400; }
+    p, li { text-wrap: pretty; }
+    a { color: var(--color-primary); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; transition: color var(--transition); }
+    a:hover { color: var(--color-primary-hover); }
+    ::selection { background: rgba(126, 184, 212, 0.25); }
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    .wrap { max-width: var(--content-wide); margin-inline: auto; padding-inline: clamp(var(--space-4), 4vw, var(--space-12)); }
+
+    /* Header */
+    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(8, 12, 20, 0.86); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--color-border); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 60px; }
+    .header-brand { white-space: nowrap; font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent); text-decoration: none; padding-block: var(--space-3); }
+    .header-brand:hover { color: var(--color-accent-hover); }
+    .header-back { white-space: nowrap; display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none; }
+    .header-back:hover { color: var(--color-text); }
+    .header-back .sm { display: none; }
+
+    /* Hero */
+    .lib-hero { position: relative; overflow: hidden; padding-block: clamp(var(--space-10), 7vw, var(--space-16)) clamp(var(--space-8), 4vw, var(--space-12));
+      background: radial-gradient(ellipse at 20% 80%, #1a2a5e 0%, transparent 55%), radial-gradient(ellipse at 80% 10%, #2a1a4e 0%, transparent 50%), #070b14; border-bottom: 1px solid var(--color-border); }
+    .lib-hero::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image:
+      radial-gradient(1px 1px at 8% 15%, rgba(255,255,255,.8) 0, transparent 100%), radial-gradient(1px 1px at 17% 72%, rgba(255,255,255,.55) 0, transparent 100%),
+      radial-gradient(1.5px 1.5px at 24% 33%, rgba(255,255,255,.7) 0, transparent 100%), radial-gradient(1px 1px at 42% 12%, rgba(255,255,255,.75) 0, transparent 100%),
+      radial-gradient(2px 2px at 48% 55%, rgba(212,170,90,.45) 0, transparent 100%), radial-gradient(1px 1px at 63% 78%, rgba(200,220,255,.5) 0, transparent 100%),
+      radial-gradient(1.5px 1.5px at 71% 42%, rgba(255,255,255,.7) 0, transparent 100%), radial-gradient(1px 1px at 85% 64%, rgba(200,220,255,.55) 0, transparent 100%),
+      radial-gradient(1px 1px at 92% 35%, rgba(255,255,255,.65) 0, transparent 100%), radial-gradient(2px 2px at 53% 8%, rgba(126,184,212,.5) 0, transparent 100%); }
+    .lib-hero .wrap { position: relative; }
+    .eyebrow { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--space-4); display: flex; align-items: center; gap: var(--space-3); }
+    .eyebrow { flex-wrap: wrap; row-gap: 2px; }
+    .eyebrow span { white-space: nowrap; }
+    .eyebrow span + span { color: var(--color-text-muted); }
+    .eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--color-accent); opacity: .5; }
+    .lib-hero h1 { font-family: var(--font-display); font-size: var(--text-2xl); color: #f0f4ff; letter-spacing: -0.01em; margin-bottom: var(--space-3); }
+    .lib-hero h1 em { font-style: italic; color: var(--color-accent); }
+    .lib-hero__sub { font-family: var(--font-read); font-size: var(--text-lg); font-weight: 300; font-style: italic; color: var(--color-text-muted); max-width: 60ch; line-height: 1.5; }
+    .stats { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-8); margin-top: var(--space-8); }
+    .stat b { display: block; font-family: var(--font-display); font-weight: 400; font-size: var(--text-xl); line-height: 1.1; color: #f0f4ff; font-variant-numeric: tabular-nums; }
+    .stat span { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-text-muted); }
+
+    /* Layout */
+    .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: var(--space-10); padding-block: var(--space-10) var(--space-16); align-items: start; }
+    .side { position: sticky; top: calc(60px + var(--space-6)); max-height: calc(100dvh - 60px - var(--space-10)); overflow-y: auto; padding: var(--space-5); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); scrollbar-width: thin; }
+    .side__label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: var(--space-3); }
+    .topics { display: flex; flex-direction: column; gap: 2px; list-style: none; }
+    .topic { display: flex; width: 100%; align-items: baseline; justify-content: space-between; gap: var(--space-3); text-align: left; font-size: var(--text-sm); line-height: 1.35; color: var(--color-text-muted); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); border-left: 2px solid transparent; transition: color var(--transition), border-color var(--transition), background var(--transition); }
+    .topic:hover { color: var(--color-text); background: rgba(255,255,255,.04); }
+    .topic[aria-pressed="true"] { color: var(--color-accent); border-left-color: var(--color-accent); background: var(--color-accent-dim); }
+    .topic__n { font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-text-faint); font-variant-numeric: tabular-nums; }
+    .topic[aria-pressed="true"] .topic__n { color: var(--color-accent); }
+    .side__rule { height: 1px; background: var(--color-divider); margin: var(--space-4) 0; }
+    .check { display: flex; align-items: center; gap: var(--space-3); min-height: 36px; font-size: var(--text-sm); color: var(--color-text-muted); cursor: pointer; padding-inline: var(--space-3); border-radius: var(--radius-sm); }
+    .check:hover { color: var(--color-text); }
+    .check input { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; flex: none; border: 1px solid var(--color-text-faint); border-radius: 4px; background: var(--color-bg); display: grid; place-content: center; cursor: pointer; transition: background var(--transition), border-color var(--transition); }
+    .check input::after { content: ''; width: 10px; height: 6px; border-left: 2px solid #111; border-bottom: 2px solid #111; transform: rotate(-45deg) translate(1px, -1px) scale(0); transition: transform var(--transition); }
+    .check input:checked { background: var(--color-accent); border-color: var(--color-accent); }
+    .check input:checked::after { transform: rotate(-45deg) translate(1px, -1px) scale(1); }
+    .check b { font-weight: 400; font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-text-faint); margin-left: auto; }
+
+    /* Toolbar */
+    .toolbar { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; margin-bottom: var(--space-4); }
+    .search { position: relative; flex: 1 1 280px; }
+    .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--color-text-faint); pointer-events: none; }
+    .search input { width: 100%; min-height: 46px; padding: 0 var(--space-4) 0 42px; border-radius: var(--radius-full); border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); font-size: 1rem; transition: border-color var(--transition), background var(--transition); }
+    .search input::placeholder { color: var(--color-text-faint); }
+    .search input:hover { border-color: var(--color-text-faint); }
+    .search input:focus { outline: 2px solid var(--color-accent); outline-offset: 1px; border-color: transparent; background: var(--color-surface-2); }
+    .sort { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-muted); }
+    .sort select { min-height: 46px; padding: 0 2.2rem 0 var(--space-4); border-radius: var(--radius-full); border: 1px solid var(--color-border); background: var(--color-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238f9bba' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; appearance: none; -webkit-appearance: none; color: var(--color-text); font-size: 0.95rem; cursor: pointer; }
+    .sort select:hover { border-color: var(--color-text-faint); }
+    .resultbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-4); margin-bottom: var(--space-5); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-divider); font-size: var(--text-sm); color: var(--color-text-muted); min-height: 44px; }
+    .resultbar strong { color: var(--color-text); font-weight: 600; }
+    .clear { color: var(--color-accent); font-size: var(--text-sm); text-decoration: underline; text-underline-offset: 3px; min-height: 44px; padding-inline: var(--space-2); }
+    .clear:hover { color: var(--color-accent-hover); }
+    .clear[hidden] { display: none; }
+
+    /* Papers */
+    .group-h { font-family: var(--font-display); font-size: var(--text-xl); color: #f0f4ff; margin: var(--space-10) 0 var(--space-4); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-divider); display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-4); }
+    .group-h:first-child { margin-top: 0; }
+    .group-h small { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--color-text-faint); }
+    .papers { display: grid; gap: var(--space-4); list-style: none; }
+    .paper { position: relative; padding: clamp(var(--space-5), 2.4vw, var(--space-8)); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); transition: border-color var(--transition), background var(--transition), opacity var(--transition); }
+    .paper:hover { border-color: #33446e; }
+    .paper.is-target { border-color: var(--color-accent); box-shadow: 0 0 0 1px var(--color-accent), 0 18px 50px -28px rgba(212,170,90,.55); }
+    .paper.is-read { background: transparent; }
+    .paper.is-read .paper__title a, .paper.is-read .paper__sum { color: var(--color-text-muted); }
+    .paper__top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin-bottom: var(--space-3); font-size: 0.8rem; }
+    .tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: var(--radius-full); border: 1px solid currentColor; line-height: 1.5; white-space: nowrap; }
+    .tag--topic { color: var(--color-primary); background: rgba(126,184,212,.07); cursor: pointer; }
+    .tag--topic:hover { background: rgba(126,184,212,.16); }
+    .tag--open { color: var(--color-teal); background: rgba(77,184,168,.07); }
+    .tag--copy { color: var(--color-nebula); background: rgba(155,121,200,.08); }
+    .tag--pay { color: var(--color-text-muted); }
+    .tag--type { color: var(--color-text-muted); border-color: var(--color-border); }
+    .paper__date { margin-left: auto; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.06em; color: var(--color-text-muted); white-space: nowrap; }
+    .paper__title { text-wrap: pretty; font-family: var(--font-display); font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem); line-height: 1.22; margin-bottom: var(--space-2); }
+    .paper__title a { color: #f0f4ff; text-decoration: none; }
+    .paper__title a:hover { color: var(--color-accent-hover); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    .paper__by { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-4); }
+    .paper__by i { font-family: var(--font-read); color: var(--color-text); }
+    .paper__sum { font-family: var(--font-read); font-size: 1.02rem; line-height: 1.68; color: var(--color-text); max-width: 72ch; }
+    .paper__why { margin-top: var(--space-3); padding-left: var(--space-4); border-left: 2px solid var(--color-accent); font-size: var(--text-sm); line-height: 1.6; color: var(--color-text-muted); max-width: 72ch; }
+    .paper__why b { font-family: var(--font-mono); font-weight: 400; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); display: block; margin-bottom: 2px; }
+    .paper__note { margin-top: var(--space-3); font-size: 0.86rem; line-height: 1.55; color: #e8b48c; max-width: 72ch; display: flex; gap: var(--space-2); }
+    .paper__note svg { flex: none; margin-top: 3px; }
+    .paper__act { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin-top: var(--space-5); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: 44px; padding: 0 1.1rem; border-radius: var(--radius-full); font-size: 0.92rem; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background var(--transition), color var(--transition), border-color var(--transition), transform var(--transition); }
+    .btn:active { transform: translateY(1px); }
+    .btn--primary { background: var(--color-accent); color: #111; border: 1px solid var(--color-accent); }
+    .btn--primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); color: #111; }
+    .btn--ghost { color: var(--color-text); border: 1px solid var(--color-border); font-weight: 500; }
+    .btn--ghost:hover { border-color: var(--color-text-muted); background: rgba(255,255,255,.04); color: var(--color-text); }
+    .paper__tools { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+    .icon { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 0.7rem; border-radius: var(--radius-full); font-size: 0.84rem; color: var(--color-text-muted); transition: color var(--transition), background var(--transition); }
+    .icon:hover { color: var(--color-text); background: rgba(255,255,255,.05); }
+    .icon[aria-pressed="true"] { color: var(--color-accent); }
+    .icon[aria-pressed="true"] svg.fillable { fill: currentColor; }
+    .icon--read[aria-pressed="true"] { color: var(--color-teal); }
+
+    .empty { padding: var(--space-12) var(--space-6); text-align: center; border: 1px dashed var(--color-border); border-radius: var(--radius-lg); color: var(--color-text-muted); }
+    .empty h2 { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); margin-bottom: var(--space-2); }
+    .empty p { max-width: 46ch; margin: 0 auto var(--space-5); }
+    .skel { height: 210px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); background: linear-gradient(100deg, var(--color-surface) 30%, var(--color-surface-2) 50%, var(--color-surface) 70%) 0 0 / 300% 100%; animation: shimmer 1.6s linear infinite; }
+    @keyframes shimmer { to { background-position: -300% 0; } }
+
+    .about { margin-top: var(--space-12); padding: clamp(var(--space-5), 2.4vw, var(--space-8)); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: linear-gradient(180deg, rgba(212,170,90,.06), rgba(212,170,90,.015)); }
+    .about h2 { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); margin-bottom: var(--space-3); }
+    .about p, .about li { font-family: var(--font-read); font-size: 0.98rem; line-height: 1.65; color: var(--color-text-muted); max-width: 70ch; }
+    .about ul { margin: var(--space-3) 0 var(--space-3) 1.2rem; display: grid; gap: var(--space-2); }
+    .about strong { color: var(--color-text); font-weight: 600; }
+
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); padding: 0.7rem 1.1rem; border-radius: var(--radius-full); background: var(--color-surface-3); border: 1px solid var(--color-border); color: var(--color-text); font-size: 0.9rem; opacity: 0; pointer-events: none; transition: opacity var(--transition), transform var(--transition); z-index: 200; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+
+    .site-footer { border-top: 1px solid var(--color-border); padding-block: var(--space-8); }
+    .site-footer p { font-size: var(--text-xs); color: var(--color-text-muted); text-align: center; }
+    .site-footer a { color: var(--color-text-muted); }
+    .site-footer a:hover { color: var(--color-text); }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); padding-top: var(--space-6); }
+      .side { position: static; max-height: none; overflow: visible; padding: 0; background: none; border: 0; border-radius: 0; }
+      .side__label { display: none; }
+      .topics { flex-direction: row; overflow-x: auto; gap: var(--space-2); margin-inline: calc(-1 * clamp(var(--space-4), 4vw, var(--space-12))); padding: 2px clamp(var(--space-4), 4vw, var(--space-12)) var(--space-2); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+      .topics::-webkit-scrollbar { display: none; }
+      .topic { width: auto; flex: none; align-items: center; min-height: 44px; white-space: nowrap; border: 1px solid var(--color-border); border-radius: var(--radius-full); padding: 0 var(--space-4); background: var(--color-surface); }
+      .topic[aria-pressed="true"] { border-color: var(--color-accent); }
+      .side__rule { display: none; }
+      .checks { display: flex; flex-wrap: wrap; gap: 0 var(--space-2); margin-top: var(--space-2); }
+      .check { min-height: 44px; padding-inline: var(--space-2) var(--space-3); }
+      .check b { margin-left: 2px; }
+    }
+    @media (max-width: 560px) {
+      .header-back .lg { display: none; } .header-back .sm { display: inline; }
+      .eyebrow { letter-spacing: 0.14em; } .eyebrow::before { display: none; }
+      .paper__sum { font-size: 1rem; }
+      .paper__date { margin-left: 0; flex-basis: 100%; }
+      .paper__tools { margin-left: 0; flex-basis: 100%; justify-content: space-between; border-top: 1px solid var(--color-divider); padding-top: var(--space-2); margin-top: var(--space-2); }
+      .paper__act .btn { flex: 1 1 auto; }
+      .sort { flex: 1 1 100%; }
+      .sort select { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="header-brand" href="index.html">✦ Cosmic Perspectives</a>
+    <a class="header-back" href="index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      <span class="lg">Back to the sections</span><span class="sm">Sections</span>
+    </a>
+  </div>
+</header>
+
+<section class="lib-hero">
+  <div class="wrap">
+    <p class="eyebrow"><span>Peer-reviewed</span><span id="updated">Updated November 2026</span></p>
+    <h1>Research <em>Library</em></h1>
+    <p class="lib-hero__sub">The newest peer-reviewed papers on every topic in Cosmic Perspectives. Each one has a plain summary and a link to read it, free wherever a free copy exists.</p>
+    <div class="stats" id="stats" aria-label="Library totals">
+      <div class="stat"><b id="st-papers">–</b><span>Papers</span></div>
+      <div class="stat"><b id="st-free">–</b><span>Free to read</span></div>
+      <div class="stat"><b id="st-topics">–</b><span>Topics</span></div>
+      <div class="stat"><b id="st-new">–</b><span>Newest paper</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap layout">
+  <aside class="side" aria-label="Filters">
+    <p class="side__label">Topics</p>
+    <ul class="topics" id="topics"></ul>
+    <div class="side__rule"></div>
+    <p class="side__label">Show only</p>
+    <div class="checks">
+      <label class="check"><input type="checkbox" id="f-free"> Free to read <b id="n-free"></b></label>
+      <label class="check"><input type="checkbox" id="f-saved"> Saved <b id="n-saved"></b></label>
+      <label class="check"><input type="checkbox" id="f-unread"> Not read yet <b id="n-unread"></b></label>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="toolbar">
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <label class="sr" for="q">Search the library</label>
+        <input id="q" type="search" placeholder="Search titles, authors, journals, summaries" autocomplete="off" spellcheck="false">
+      </div>
+      <label class="sort"><span class="sr">Sort by</span>
+        <select id="sort" aria-label="Sort papers">
+          <option value="new">Newest first</option>
+          <option value="topic">Grouped by topic</option>
+          <option value="journal">Journal A to Z</option>
+        </select>
+      </label>
+    </div>
+    <div class="resultbar">
+      <p id="count" role="status" aria-live="polite">Loading the library…</p>
+      <button type="button" class="clear" id="clear" hidden>Clear filters</button>
+    </div>
+
+    <div id="list"><div class="papers"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div>
+
+    <section class="about" aria-labelledby="about-h">
+      <h2 id="about-h">How this library is kept</h2>
+      <p>Every entry was published in a peer-reviewed journal in 2025 or 2026, and each one was checked against the publisher's DOI record before it was listed.</p>
+      <ul>
+        <li><strong>Free to read</strong> means the journal's own version is open. <strong>Free copy</strong> means the journal version needs a subscription, but the authors posted a legal copy (arXiv, PubMed Central or a university archive), and the Read button opens that copy. An author copy can differ slightly from the final journal text.</li>
+        <li>Preprints that have not passed peer review are left out, along with press releases and news stories.</li>
+        <li>The summaries are plain-language notes written for this site. They are a guide to what the paper reports, not a replacement for reading it. Where a finding is early or disputed, a note says so.</li>
+        <li><strong>Saved</strong> and <strong>read</strong> marks are stored in this browser only, so they stay private and do not follow you to another device.</li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Cosmic Perspectives · Research Library · by Michael L. Williams · <a href="index.html">The sections</a> · <a href="https://elyriandoctrine.com">elyriandoctrine.com</a> · <a href="https://elyriansun.substack.com">Substack</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p style="padding:2rem;text-align:center">The Research Library needs JavaScript to load its list of papers.</p></noscript>
+
+<script>
+(function () {
+  'use strict';
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var $ = function (id) { return document.getElementById(id); };
+  var listEl = $('list'), countEl = $('count'), clearEl = $('clear'), topicsEl = $('topics');
+  var DATA = { papers: [], topics: [] }, TOPIC = {};
+
+  // Saved / read marks live in this browser only.
+  var store = (function () {
+    var mem = {};
+    function get(k) { try { return JSON.parse(window.localStorage.getItem(k) || '[]'); } catch (e) { return mem[k] || []; } }
+    function set(k, v) { mem[k] = v; try { window.localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    return { get: get, set: set };
+  })();
+  var saved = {}, read = {};
+  store.get('cp_lib_saved').forEach(function (id) { saved[id] = 1; });
+  store.get('cp_lib_read').forEach(function (id) { read[id] = 1; });
+
+  var params = new URLSearchParams(location.search);
+  var state = { q: params.get('q') || '', topic: params.get('topic') || 'all', free: false, saved: false, unread: false, sort: 'new' };
+  var target = /^#p-/.test(location.hash) ? decodeURIComponent(location.hash.slice(3)) : '';
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function longDate(iso) { var m = /^(\d{4})-(\d{2})(?:-(\d{2}))?/.exec(iso || ''); return m ? MONTHS[+m[2] - 1] + (m[3] ? ' ' + (+m[3]) : '') + ', ' + m[1] : ''; }
+  function shortDate(iso) { var m = /^(\d{4})-(\d{2})(?:-(\d{2}))?/.exec(iso || ''); return m ? MONTHS[+m[2] - 1].slice(0, 3) + (m[3] ? ' ' + (+m[3]) : '') + ', ' + m[1] : ''; }
+  function isFree(p) { return !!p.free_url; }
+  function toast(msg) { var t = $('toast'); t.textContent = msg; t.classList.add('is-on'); clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove('is-on'); }, 2200); }
+  function citation(p) { return p.authors + ' (' + p.published.slice(0, 4) + '). ' + p.title + '. ' + p.journal + '. ' + p.url; }
+
+  function matches(p, ignoreTopic) {
+    if (!ignoreTopic && state.topic !== 'all' && p.section !== state.topic) return false;
+    if (state.free && !isFree(p)) return false;
+    if (state.saved && !saved[p.id]) return false;
+    if (state.unread && read[p.id]) return false;
+    if (state.q) {
+      var words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+      for (var i = 0; i < words.length; i++) if (p._hay.indexOf(words[i]) < 0) return false;
+    }
+    return true;
+  }
+
+  var ICON = {
+    ext: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>',
+    save: '<svg class="fillable" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v17l-6-4.5L6 21z"/></svg>',
+    check: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>',
+    copy: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
+    warn: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>'
+  };
+  var TYPE = { research: 'Research', review: 'Review', 'meta-analysis': 'Meta-analysis' };
+
+  /* Only https links are ever written into the page. */
+  function link(u) { return /^https:\/\//i.test(String(u || '')) ? String(u) : '#'; }
+
+  function card(p) {
+    var t = TOPIC[p.section] || { short: p.section };
+    var access = p.access === 'open' ? '<span class="tag tag--open">Free to read</span>'
+      : p.access === 'free-copy' ? '<span class="tag tag--copy">Free copy</span>'
+      : '<span class="tag tag--pay">Subscription</span>';
+    var primary = isFree(p)
+      ? '<a class="btn btn--primary" href="' + esc(link(p.free_url)) + '" target="_blank" rel="noopener noreferrer">' + (p.access === 'free-copy' ? 'Read the free copy ' : 'Read the paper ') + ICON.ext + '<span class="sr"> (opens in a new tab)</span></a>'
+      : '<a class="btn btn--primary" href="' + esc(link(p.url)) + '" target="_blank" rel="noopener noreferrer">View at the journal ' + ICON.ext + '<span class="sr"> (opens in a new tab)</span></a>';
+    var second = (isFree(p) && p.free_url !== p.url)
+      ? '<a class="btn btn--ghost" href="' + esc(link(p.url)) + '" target="_blank" rel="noopener noreferrer">Journal record<span class="sr"> (opens in a new tab)</span></a>' : '';
+    return '<li class="paper' + (read[p.id] ? ' is-read' : '') + (p.id === target ? ' is-target' : '') + '" id="p-' + esc(p.id) + '" data-id="' + esc(p.id) + '">' +
+      '<div class="paper__top"><button type="button" class="tag tag--topic" data-topic="' + esc(p.section) + '" title="Show only ' + esc(t.name || t.short) + '">' + esc(t.short || t.name) + '</button>' +
+      access + (p.type && p.type !== 'research' ? '<span class="tag tag--type">' + esc(TYPE[p.type] || p.type) + '</span>' : '') +
+      '<time class="paper__date" datetime="' + esc(p.published) + '">' + esc(shortDate(p.published)) + '</time></div>' +
+      '<h3 class="paper__title"><a href="' + esc(link(isFree(p) ? p.free_url : p.url)) + '" target="_blank" rel="noopener noreferrer">' + esc(p.title) + '</a></h3>' +
+      '<p class="paper__by">' + esc(p.authors) + ' · <i>' + esc(p.journal) + '</i></p>' +
+      '<p class="paper__sum">' + esc(p.summary) + '</p>' +
+      (p.why_it_matters ? '<p class="paper__why"><b>Why it matters</b>' + esc(p.why_it_matters) + '</p>' : '') +
+      (p.notes ? '<p class="paper__note">' + ICON.warn + '<span>' + esc(p.notes) + '</span></p>' : '') +
+      '<div class="paper__act">' + primary + second +
+      '<div class="paper__tools">' +
+      '<button type="button" class="icon" data-act="save" aria-pressed="' + (saved[p.id] ? 'true' : 'false') + '">' + ICON.save + '<span>' + (saved[p.id] ? 'Saved' : 'Save') + '</span></button>' +
+      '<button type="button" class="icon icon--read" data-act="read" aria-pressed="' + (read[p.id] ? 'true' : 'false') + '">' + ICON.check + '<span>' + (read[p.id] ? 'Read' : 'Mark read') + '</span></button>' +
+      '<button type="button" class="icon" data-act="cite">' + ICON.copy + '<span>Copy citation</span></button>' +
+      '</div></div></li>';
+  }
+
+  function renderTopics() {
+    var counts = { all: 0 };
+    DATA.papers.forEach(function (p) { if (matches(p, true)) { counts.all++; counts[p.section] = (counts[p.section] || 0) + 1; } });
+    var html = '<li><button type="button" class="topic" data-topic="all" aria-pressed="' + (state.topic === 'all') + '"><span>All topics</span><span class="topic__n">' + counts.all + '</span></button></li>';
+    DATA.topics.forEach(function (t) {
+      html += '<li><button type="button" class="topic" data-topic="' + esc(t.id) + '" aria-pressed="' + (state.topic === t.id) + '"><span>' + esc(t.name) + '</span><span class="topic__n">' + (counts[t.id] || 0) + '</span></button></li>';
+    });
+    topicsEl.innerHTML = html;
+  }
+
+  function render() {
+    var rows = DATA.papers.filter(function (p) { return matches(p); });
+    var byDate = function (a, b) { return a.published < b.published ? 1 : a.published > b.published ? -1 : a.title.localeCompare(b.title); };
+    var html = '';
+    if (!rows.length) {
+      html = '<div class="empty"><h2>Nothing matches yet</h2><p>' +
+        (state.saved ? 'You have not saved any papers that fit these filters. Use Save on a paper to keep it here.' : 'Try a shorter search, or clear the filters to see the whole library.') +
+        '</p><button type="button" class="btn btn--ghost" data-clear>Clear filters</button></div>';
+    } else if (state.sort === 'topic') {
+      DATA.topics.forEach(function (t) {
+        var g = rows.filter(function (p) { return p.section === t.id; }).sort(byDate);
+        if (!g.length) return;
+        html += '<h2 class="group-h">' + esc(t.name) + '<small>' + g.length + (g.length === 1 ? ' paper' : ' papers') + '</small></h2><ul class="papers">' + g.map(card).join('') + '</ul>';
+      });
+    } else {
+      rows.sort(state.sort === 'journal' ? function (a, b) { return a.journal.localeCompare(b.journal) || byDate(a, b); } : byDate);
+      html = '<ul class="papers">' + rows.map(card).join('') + '</ul>';
+    }
+    listEl.innerHTML = html;
+
+    var total = DATA.papers.length;
+    var tn = state.topic !== 'all' && TOPIC[state.topic] ? ' in ' + TOPIC[state.topic].name : '';
+    countEl.innerHTML = rows.length === total ? 'Showing all <strong>' + total + '</strong> papers'
+      : 'Showing <strong>' + rows.length + '</strong> of ' + total + ' papers' + esc(tn);
+    var filtered = state.q || state.topic !== 'all' || state.free || state.saved || state.unread;
+    clearEl.hidden = !filtered;
+
+    $('n-free').textContent = DATA.papers.filter(isFree).length;
+    $('n-saved').textContent = DATA.papers.filter(function (p) { return saved[p.id]; }).length;
+    $('n-unread').textContent = DATA.papers.filter(function (p) { return !read[p.id]; }).length;
+    renderTopics();
+
+    var u = new URL(location.href);
+    if (state.topic !== 'all') u.searchParams.set('topic', state.topic); else u.searchParams.delete('topic');
+    if (state.q) u.searchParams.set('q', state.q); else u.searchParams.delete('q');
+    try { history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e) {}
+  }
+
+  function clearAll() {
+    state.q = ''; state.topic = 'all'; state.free = state.saved = state.unread = false;
+    $('q').value = ''; $('f-free').checked = $('f-saved').checked = $('f-unread').checked = false;
+    render();
+  }
+  function setTopic(id) {
+    state.topic = (id === 'all' || TOPIC[id]) ? id : 'all';
+    render();
+    var active = topicsEl.querySelector('[aria-pressed="true"]');
+    if (active && active.scrollIntoView && window.matchMedia('(max-width: 900px)').matches) active.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }
+
+  topicsEl.addEventListener('click', function (e) { var b = e.target.closest('[data-topic]'); if (b) { setTopic(b.getAttribute('data-topic')); var again = topicsEl.querySelector('[data-topic="' + state.topic + '"]'); if (again) again.focus({ preventScroll: true }); } });
+  var qt; $('q').addEventListener('input', function (e) { clearTimeout(qt); var v = e.target.value; qt = setTimeout(function () { state.q = v.trim(); render(); }, 120); });
+  $('sort').addEventListener('change', function (e) { state.sort = e.target.value; render(); });
+  $('f-free').addEventListener('change', function (e) { state.free = e.target.checked; render(); });
+  $('f-saved').addEventListener('change', function (e) { state.saved = e.target.checked; render(); });
+  $('f-unread').addEventListener('change', function (e) { state.unread = e.target.checked; render(); });
+  clearEl.addEventListener('click', clearAll);
+
+  listEl.addEventListener('click', function (e) {
+    if (e.target.closest('[data-clear]')) { clearAll(); return; }
+    var tg = e.target.closest('.tag--topic');
+    if (tg) { setTopic(tg.getAttribute('data-topic')); window.scrollTo({ top: document.querySelector('.layout').offsetTop - 60 }); return; }
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    var li = b.closest('.paper'), id = li.getAttribute('data-id'), act = b.getAttribute('data-act');
+    var p = DATA.papers.filter(function (x) { return x.id === id; })[0]; if (!p) return;
+    if (act === 'save' || act === 'read') {
+      var set = act === 'save' ? saved : read;
+      if (set[id]) delete set[id]; else set[id] = 1;
+      store.set(act === 'save' ? 'cp_lib_saved' : 'cp_lib_read', Object.keys(set));
+      var on = !!set[id];
+      b.setAttribute('aria-pressed', String(on));
+      b.querySelector('span').textContent = act === 'save' ? (on ? 'Saved' : 'Save') : (on ? 'Read' : 'Mark read');
+      if (act === 'read') li.classList.toggle('is-read', on);
+      $('n-saved').textContent = Object.keys(saved).length;
+      $('n-unread').textContent = DATA.papers.filter(function (x) { return !read[x.id]; }).length;
+      if ((act === 'save' && state.saved && !on) || (act === 'read' && state.unread && on)) render();
+    } else if (act === 'cite') {
+      var text = citation(p);
+      var done = function () { toast('Citation copied'); };
+      var fallback = function () { var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (err) { toast('Copy did not work in this browser'); } document.body.removeChild(ta); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+    }
+  });
+
+  fetch('research.json?v=2', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      DATA = d;
+      d.topics.forEach(function (t) { TOPIC[t.id] = t; });
+      d.papers.forEach(function (p) {
+        var t = TOPIC[p.section] || {};
+        p._hay = [p.title, p.authors, p.journal, p.summary, p.why_it_matters, p.headline, t.name, t.short, p.doi, p.published.slice(0, 4)].join(' ').toLowerCase();
+      });
+      if (state.topic !== 'all' && !TOPIC[state.topic]) state.topic = 'all';
+      $('q').value = state.q;
+      var newest = d.papers.reduce(function (m, p) { return p.published > m ? p.published : m; }, '');
+      $('updated').textContent = 'Updated ' + longDate(d.updated);
+      $('st-papers').textContent = d.papers.length;
+      $('st-free').textContent = d.papers.filter(isFree).length;
+      $('st-topics').textContent = d.topics.length;
+      $('st-new').textContent = shortDate(newest);
+      // Remove marks for papers no longer listed.
+      var ids = {}; d.papers.forEach(function (p) { ids[p.id] = 1; });
+      if (target && !ids[target]) target = '';
+      render();
+      if (target) {
+        var el = document.getElementById('p-' + target);
+        if (el) setTimeout(function () { el.scrollIntoView({ block: 'center' }); el.setAttribute('tabindex', '-1'); el.focus({ preventScroll: true }); }, 60);
+      }
+    })
+    .catch(function () {
+      countEl.textContent = 'The library could not be loaded.';
+      listEl.innerHTML = '<div class="empty"><h2>The library did not load</h2><p>Please check your connection and reload the page.</p><button type="button" class="btn btn--ghost" onclick="location.reload()">Reload</button></div>';
+    });
+})();
+</script>
+</body>
+</html>
